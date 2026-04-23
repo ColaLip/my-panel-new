@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             transition: background 0.3s ease, color 0.2s ease;
             min-height: 100vh;
         }
@@ -21,35 +21,35 @@
         /* ========== 3-КОЛОНОЧНЫЙ МАКЕТ ========== */
         .dashboard {
             display: flex;
-            gap: 28px;
-            max-width: 2000px;
+            gap: 32px;
+            max-width: 2200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 28px;
         }
 
-        /* ЛЕВЫЙ + ПРАВЫЙ САЙДБАРЫ — УВЕЛИЧЕНЫ В 2 РАЗА */
+        /* ЛЕВЫЙ + ПРАВЫЙ САЙДБАРЫ — УВЕЛИЧЕНЫ ДО 440px */
         .sidebar {
-            flex: 0 0 380px;          /* было 320px → теперь 380px */
+            flex: 0 0 440px;
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 32px;
         }
 
         .sidebar-card {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
-            border-radius: 32px;
-            padding: 28px;
+            border-radius: 36px;
+            padding: 32px;
             transition: background 0.2s;
             box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-title {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 800;
-            margin-bottom: 24px;
-            border-left: 5px solid #ffd700;
-            padding-left: 18px;
+            margin-bottom: 28px;
+            border-left: 6px solid #ffd700;
+            padding-left: 20px;
         }
 
         .today-stats {
@@ -57,21 +57,24 @@
         }
 
         .today-points {
-            font-size: 4.2rem;
+            font-size: 4.8rem;
             font-weight: 900;
-            color: #ff8c00;
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .rank-progress {
-            margin-top: 28px;
+            margin-top: 32px;
         }
 
         .progress-bar-bg {
             background: rgba(0, 0, 0, 0.12);
             border-radius: 40px;
-            height: 16px;
+            height: 18px;
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .progress-bar-fill {
@@ -85,10 +88,10 @@
         .top-category-item {
             display: flex;
             justify-content: space-between;
-            padding: 14px 0;
+            padding: 16px 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            font-size: 1.15rem;
-            font-weight: 500;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
 
         /* ОСНОВНОЙ КОНТЕНТ */
@@ -97,14 +100,14 @@
             min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 32px;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(6px);
-            border-radius: 34px;
-            padding: 28px 34px;
+            border-radius: 36px;
+            padding: 32px 38px;
             box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
             transition: background 0.2s;
         }
@@ -115,14 +118,14 @@
             box-shadow: 0 0 35px rgba(255, 215, 0, 0.4);
         }
 
-        /* ЗАГОЛОВОК С БОЛЬШИМ ColaLip + ЧЁРНАЯ ОКАНТОВКА */
+        /* ЗАГОЛОВОК — ОГНЕННЫЙ ГРАДИЕНТ, БЕЗ ЧЁРНОЙ ОКАНТОВКИ */
         .animated-header {
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
 
         .big-colalip {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .colalip-single {
@@ -133,7 +136,7 @@
 
         .colalip-char {
             display: inline-block;
-            font-size: 3.3rem;
+            font-size: 3.6rem;
             font-weight: 900;
             background: linear-gradient(135deg, #ffd700, #ff8c00, #ff69b4, #00bfff, #ffd700);
             background-size: 300% auto;
@@ -141,9 +144,7 @@
             background-clip: text;
             color: transparent;
             animation: liquidCharBig 2.6s ease-in-out infinite, glowPulse 1.6s ease-in-out infinite;
-            text-shadow: 
-                -3px -3px 0 rgba(255, 0, 0, 0.5),
-                3px 3px 0 rgba(0, 0, 255, 0.5);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
 
         @keyframes liquidCharBig {
@@ -154,43 +155,21 @@
         }
 
         @keyframes glowPulse {
-            0%, 100% { opacity: 1; filter: brightness(1); }
-            50% { opacity: 0.92; filter: brightness(1.12); }
+            0%, 100% { opacity: 1; filter: brightness(1); text-shadow: 0 0 10px rgba(255,215,0,0.5); }
+            50% { opacity: 0.94; filter: brightness(1.1); text-shadow: 0 0 25px rgba(255,215,0,0.9); }
         }
 
-        /* ИСКРЫ ВОКРУГ ColaLip */
-        .spark {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: radial-gradient(circle, #ffd700, #ff8c00);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 12;
-            animation: sparkFade 1s ease-out forwards;
-        }
-
-        @keyframes sparkFade {
-            0% { transform: scale(1) translateY(0px); opacity: 1; }
-            100% { transform: scale(0) translateY(-40px); opacity: 0; }
-        }
-
-        /* ЗАГОЛОВОК С МОЩНОЙ ЧЁРНОЙ ОКАНТОВКОЙ (видно всегда) */
+        /* ЗАГОЛОВОК С ЗОЛОТИСТЫМ СВЕЧЕНИЕМ */
         .glow-text {
-            font-size: 2.4rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700, #ffeb3b, #ffd700);
+            background: linear-gradient(90deg, #ffd700, #ffa500, #ffd700, #ffeb3b, #ffd700);
             background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             animation: gradientMove 3s ease infinite;
-            text-shadow: 
-                4px 4px 0 #000,
-                -4px -4px 0 #000,
-                4px -4px 0 #000,
-                -4px 4px 0 #000,
-                0px 0px 12px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
         }
 
         @keyframes gradientMove {
@@ -201,9 +180,9 @@
 
         .sub {
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.05rem;
             border-left: none;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             opacity: 0.85;
         }
 
@@ -212,7 +191,7 @@
             background: rgba(0, 0, 0, 0.05);
             border-radius: 80px;
             padding: 12px 24px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -223,12 +202,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 22px;
+            padding: 8px 24px;
             border-radius: 60px;
             cursor: pointer;
             transition: 0.2s;
             background: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
         }
 
@@ -238,109 +217,166 @@
             transform: scale(1.02);
         }
 
-        .color-dot-small {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-        }
-
         .stats-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 24px;
+            gap: 28px;
             margin-bottom: 20px;
         }
 
         .stat-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(6px);
-            border-radius: 28px;
-            padding: 20px;
+            border-radius: 30px;
+            padding: 22px;
             flex: 1;
             text-align: center;
             transition: transform 0.2s;
         }
 
-        .stat-card:hover { transform: translateY(-4px); }
+        .stat-card:hover { transform: translateY(-5px); }
 
         .stat-number {
-            font-size: 2.6rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            color: #1a5d8f;
+            background: linear-gradient(135deg, #1a5d8f, #2c7ab1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .controls-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 20px;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         button, select {
             background: #e4ebf3;
             border: none;
-            padding: 10px 24px;
+            padding: 12px 28px;
             border-radius: 50px;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: 0.2s;
         }
 
         button.active { background: #1f6e9e; color: white; }
 
-        #mainChart { height: 550px; width: 100%; }
-        .double-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-        #currentMonthChart, #previousMonthChart { height: 400px; }
+        #mainChart { height: 580px; width: 100%; }
+        .double-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        #currentMonthChart, #previousMonthChart { height: 420px; }
 
-        /* ГРАФИКИ В САЙДБАРАХ — УВЕЛИЧЕНЫ */
-        #gymChart { height: 420px; width: 100%; }
-        #categoryPieChart { height: 380px; width: 100%; }
+        /* ГРАФИКИ В САЙДБАРАХ — увеличены */
+        #gymChart { height: 460px; width: 100%; }
+        #categoryPieChart { height: 420px; width: 100%; }
 
+        /* ДОСТИЖЕНИЯ */
         .achievements-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
             justify-content: center;
-            margin-top: 18px;
+            margin-top: 20px;
         }
 
         .achievement {
             background: rgba(255, 255, 255, 0.6);
-            border-radius: 28px;
-            padding: 12px 18px;
+            border-radius: 32px;
+            padding: 14px 22px;
             text-align: center;
-            min-width: 110px;
+            min-width: 120px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
         }
 
         .achievement.unlocked {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 180, 0, 0.15));
-            border: 1.5px solid gold;
+            border: 2px solid gold;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
         }
 
         .achievement.locked { opacity: 0.55; filter: grayscale(0.1); }
+        .achievement:hover { transform: scale(1.03); }
 
-        .forecast-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #4caf50;
+        /* Искры для ачивок и круговых диаграмм */
+        .spark-achievement, .spark-chart {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 20;
+            animation: sparkFloat 0.8s ease-out forwards;
         }
 
-        @media (max-width: 1300px) {
-            .sidebar { flex: 0 0 320px; }
-            .glow-text { font-size: 1.8rem; }
-            .colalip-char { font-size: 2.5rem; }
+        @keyframes sparkFloat {
+            0% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(0) translateY(-35px); opacity: 0; }
         }
 
-        @media (max-width: 1050px) {
+        /* Тосты для ачивок */
+        .toast-notify {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
+            color: #ffd700;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: toastFade 2s ease forwards;
+            pointer-events: none;
+            font-size: 1rem;
+            border-left: 5px solid gold;
+        }
+
+        @keyframes toastFade {
+            0% { opacity: 0; bottom: 0; }
+            15% { opacity: 1; bottom: 30px; }
+            85% { opacity: 1; bottom: 30px; }
+            100% { opacity: 0; bottom: 0; }
+        }
+
+        .forecast-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .forecast-btn {
+            background: rgba(0,0,0,0.1);
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .forecast-btn.active {
+            background: #ff8c00;
+            color: white;
+        }
+
+        @media (max-width: 1400px) {
+            .sidebar { flex: 0 0 380px; }
+            .glow-text { font-size: 1.9rem; }
+            .colalip-char { font-size: 2.8rem; }
+        }
+        @media (max-width: 1100px) {
             .dashboard { flex-direction: column; }
-            .sidebar { flex-direction: row; flex-wrap: wrap; }
-            .sidebar > div { flex: 1; min-width: 280px; }
+            .sidebar { flex-direction: row; flex-wrap: wrap; width: 100%; }
+            .sidebar > div { flex: 1; min-width: 300px; }
         }
 
-        /* ========== 10 ЦВЕТОВЫХ ТЕМ ========== */
+        /* Цветовые темы */
         body.light { background: linear-gradient(135deg, #f0f4fa, #e2eaf5); color: #0f2842; }
         body.dark { background: linear-gradient(135deg, #1a2a3a, #0f1a24); color: #eef2f7; }
         body.mint { background: linear-gradient(135deg, #d4e4d7, #bdd4c3); color: #1e3a2f; }
@@ -351,438 +387,111 @@
         body.forest { background: linear-gradient(135deg, #c8e2c5, #a8c9a3); color: #1a3a1a; }
         body.cherry { background: linear-gradient(135deg, #f5d0d0, #e8b0b0); color: #5e2a2a; }
         body.cosmic { background: linear-gradient(135deg, #1a0f2e, #2d1b4e); color: #ddd9ff; }
-
-        body.dark .card, body.dark .sidebar-card,
-        body.cosmic .card, body.cosmic .sidebar-card { background: rgba(30, 40, 52, 0.92); color: #eef2f7; }
-        body.dark .stat-card, body.cosmic .stat-card { background: rgba(20, 30, 42, 0.8); }
-        body.mint .card, body.forest .card { background: rgba(240, 255, 240, 0.94); }
-        body.warm .card, body.sunset .card { background: rgba(255, 248, 240, 0.94); }
+        body.dark .card, body.dark .sidebar-card, body.cosmic .card, body.cosmic .sidebar-card { background: rgba(30, 40, 52, 0.92); }
     </style>
 </head>
 <body class="light">
 <div class="dashboard">
-    <!-- ЛЕВЫЙ САЙДБАР (увеличен) -->
     <div class="sidebar">
         <div class="sidebar-card">
             <div class="sidebar-title">📅 Сегодня</div>
-            <div class="today-stats">
-                <div class="today-points" id="todayPoints">0</div>
-                <div style="font-size:1rem;">баллов набрано</div>
-            </div>
-            <div class="rank-progress">
-                <div style="font-weight:800; font-size:1.1rem;">🎖️ До следующего звания</div>
-                <div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill"></div></div>
-                <div style="margin-top: 10px; font-size:0.95rem;" id="rankNeedText">—</div>
-            </div>
+            <div class="today-stats"><div class="today-points" id="todayPoints">0</div><div style="font-size:1.1rem;">баллов набрано</div></div>
+            <div class="rank-progress"><div style="font-weight:800; font-size:1.2rem;">🎖️ До следующего звания</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill"></div></div><div style="margin-top: 12px;" id="rankNeedText">—</div></div>
         </div>
-        <div class="sidebar-card">
-            <div class="sidebar-title">🏆 Топ-категории (неделя)</div>
-            <div id="topCategoriesList" style="font-size:1.1rem;">—</div>
-        </div>
+        <div class="sidebar-card"><div class="sidebar-title">🏆 Топ-категории (неделя)</div><div id="topCategoriesList" style="font-size:1.2rem;">—</div></div>
     </div>
 
-    <!-- ОСНОВНОЙ БЛОК (центр) -->
     <div class="main-content">
         <div class="card gold-card">
-            <div class="animated-header">
-                <div class="big-colalip"><div class="colalip-single" id="colalipSingle"></div></div>
-                <h1 class="glow-text">🔥 ПОЛНЫЙ АНАЛИЗ ПРОГРЕССА 🔥</h1>
-            </div>
+            <div class="animated-header"><div class="big-colalip"><div class="colalip-single" id="colalipSingle"></div></div><h1 class="glow-text">🔥 ПОЛНЫЙ АНАЛИЗ ПРОГРЕССА 🔥</h1></div>
             <div class="sub">Твой путь к 0.1% • каждая цифра имеет значение</div>
             <div class="color-bar" id="colorBar"></div>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">ВСЕГО БАЛЛОВ</div></div>
-                <div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">ДНЕЙ АКТИВНОСТИ</div></div>
-                <div class="stat-card"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">СРЕДНИЙ БАЛЛ/ДЕНЬ</div></div>
-                <div class="stat-card"><div class="stat-number" id="bestDay">0</div><div class="stat-label">ЛУЧШИЙ ДЕНЬ</div></div>
-            </div>
+            <div class="stats-grid"><div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">ВСЕГО БАЛЛОВ</div></div><div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">ДНЕЙ АКТИВНОСТИ</div></div><div class="stat-card"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">СРЕДНИЙ БАЛЛ/ДЕНЬ</div></div><div class="stat-card"><div class="stat-number" id="bestDay">0</div><div class="stat-label">ЛУЧШИЙ ДЕНЬ</div></div></div>
         </div>
 
-        <div class="card">
-            <div class="controls-row">
-                <div class="period-group">
-                    <button class="period-btn active" data-period="all">📆 Всё время</button>
-                    <button class="period-btn" data-period="week">🗓️ 7 дней</button>
-                    <button class="period-btn" data-period="month">🌙 30 дней</button>
-                </div>
-                <select id="categorySelect"><option value="all">📊 Все категории</option></select>
-            </div>
-            <div id="mainChart"></div>
-        </div>
+        <div class="card"><div class="controls-row"><div class="period-group"><button class="period-btn active" data-period="all">📆 Всё время</button><button class="period-btn" data-period="week">🗓️ 7 дней</button><button class="period-btn" data-period="month">🌙 30 дней</button></div><select id="categorySelect"><option value="all">📊 Все категории</option></select></div><div id="mainChart"></div></div>
 
-        <div class="card">
-            <h3 style="font-size:1.6rem;">📊 Сравнение с прошлым месяцем</h3>
-            <div class="double-chart"><div id="currentMonthChart"></div><div id="previousMonthChart"></div></div>
-        </div>
+        <div class="card"><h3 style="font-size:1.7rem;">📊 Сравнение с прошлым месяцем</h3><div class="double-chart"><div id="currentMonthChart"></div><div id="previousMonthChart"></div></div></div>
 
-        <div class="card">
-            <h3 style="font-size:1.6rem;">🔮 Прогноз на следующий месяц</h3>
-            <div style="text-align:center; padding:15px;"><div class="forecast-number" id="forecastValue">—</div><div id="forecastText">Загрузка данных...</div></div>
-        </div>
+        <div class="card"><h3 style="font-size:1.7rem;">🔮 Прогноз</h3><div style="text-align:center;"><div class="forecast-number" id="forecastValue">—</div><div id="forecastText">Загрузка...</div><div class="forecast-buttons" id="forecastPeriodBtns"><button class="forecast-btn active" data-fperiod="week">Неделя</button><button class="forecast-btn" data-fperiod="month">Месяц</button><button class="forecast-btn" data-fperiod="year">Год</button></div></div></div>
 
-        <div class="card">
-            <h3 style="font-size:1.6rem;">🏅 Достижения</h3>
-            <div class="achievements-grid" id="achievementsGrid"></div>
-        </div>
+        <div class="card"><h3 style="font-size:1.7rem;">🏅 Достижения</h3><div class="achievements-grid" id="achievementsGrid"></div></div>
     </div>
 
-    <!-- ПРАВЫЙ САЙДБАР (увеличен в 2 раза) -->
-    <div class="sidebar">
-        <div class="sidebar-card">
-            <div class="sidebar-title">🏋️ Зал (суммарный вес)</div>
-            <div id="gymChart" style="height:420px;"></div>
-        </div>
-        <div class="sidebar-card">
-            <div class="sidebar-title">📈 Прогресс по категориям</div>
-            <div id="categoryPieChart" style="height:380px;"></div>
-        </div>
-    </div>
+    <div class="sidebar"><div class="sidebar-card"><div class="sidebar-title">🏋️ Зал (суммарный вес)</div><div id="gymChart" style="height:460px;"></div></div><div class="sidebar-card"><div class="sidebar-title">📈 Прогресс по категориям</div><div id="categoryPieChart" style="height:420px;"></div></div></div>
 </div>
 
 <script>
-    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
     const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
     const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     let allRecords = [];
     let activePeriod = 'all';
     let selectedCategory = 'all';
+    let forecastPeriod = 'month';
     const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
-    // ========== 10 ТЕМ (цветовая панель) ==========
-    const themes = [
-        { id: 'light', name: 'Светлая', emoji: '☀️', color: '#f0f4fa' },
-        { id: 'dark', name: 'Тёмная', emoji: '🌙', color: '#1a2a3a' },
-        { id: 'mint', name: 'Мятная', emoji: '🌿', color: '#bdd4c3' },
-        { id: 'warm', name: 'Тёплая', emoji: '🔥', color: '#f5d5b3' },
-        { id: 'lavender', name: 'Лавандовая', emoji: '🪻', color: '#d4c4e8' },
-        { id: 'ocean', name: 'Океан', emoji: '🌊', color: '#a8d0e6' },
-        { id: 'sunset', name: 'Закат', emoji: '🌅', color: '#f0a896' },
-        { id: 'forest', name: 'Лесная', emoji: '🌲', color: '#a8c9a3' },
-        { id: 'cherry', name: 'Вишнёвая', emoji: '🍒', color: '#e8b0b0' },
-        { id: 'cosmic', name: 'Космическая', emoji: '🚀', color: '#2d1b4e' }
-    ];
+    // ========== ТЕМЫ ==========
+    const themes = [{id:'light',name:'Светлая',emoji:'☀️',color:'#f0f4fa'},{id:'dark',name:'Тёмная',emoji:'🌙',color:'#1a2a3a'},{id:'mint',name:'Мятная',emoji:'🌿',color:'#bdd4c3'},{id:'warm',name:'Тёплая',emoji:'🔥',color:'#f5d5b3'},{id:'lavender',name:'Лавандовая',emoji:'🪻',color:'#d4c4e8'},{id:'ocean',name:'Океан',emoji:'🌊',color:'#a8d0e6'},{id:'sunset',name:'Закат',emoji:'🌅',color:'#f0a896'},{id:'forest',name:'Лесная',emoji:'🌲',color:'#a8c9a3'},{id:'cherry',name:'Вишнёвая',emoji:'🍒',color:'#e8b0b0'},{id:'cosmic',name:'Космическая',emoji:'🚀',color:'#2d1b4e'}];
+    function setTheme(id){ document.body.className=id; localStorage.setItem('graph_theme',id); renderAll(); updateColorBarActive(id); }
+    function updateColorBarActive(id){ document.querySelectorAll('.color-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===id)); }
+    function renderColorBar(){ const bar=document.getElementById('colorBar'); const saved=localStorage.getItem('graph_theme')||'light'; bar.innerHTML=themes.map(t=>`<div class="color-btn ${saved===t.id?'active':''}" data-theme="${t.id}"><div class="color-dot-small" style="background:${t.color}; display:inline-block; width:22px; height:22px; border-radius:50%; margin-right:8px;"></div><span>${t.emoji} ${t.name}</span></div>`).join(''); document.querySelectorAll('.color-btn').forEach(btn=>btn.addEventListener('click',()=>setTheme(btn.dataset.theme))); }
+    const savedTheme=localStorage.getItem('graph_theme'); if(savedTheme) setTheme(savedTheme); else setTheme('light'); renderColorBar();
 
-    function setTheme(themeId) {
-        document.body.className = themeId;
-        localStorage.setItem('graph_theme', themeId);
-        renderAll();
-        updateColorBarActive(themeId);
-    }
-
-    function updateColorBarActive(themeId) {
-        document.querySelectorAll('.color-btn').forEach(btn => {
-            if (btn.dataset.theme === themeId) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-    }
-
-    function renderColorBar() {
-        const bar = document.getElementById('colorBar');
-        const saved = localStorage.getItem('graph_theme') || 'light';
-        bar.innerHTML = themes.map(t => `
-            <div class="color-btn ${saved === t.id ? 'active' : ''}" data-theme="${t.id}">
-                <div class="color-dot-small" style="background: ${t.color};"></div>
-                <span>${t.emoji} ${t.name}</span>
-            </div>
-        `).join('');
-        document.querySelectorAll('.color-btn').forEach(btn => {
-            btn.addEventListener('click', () => setTheme(btn.dataset.theme));
-        });
-    }
-
-    const savedTheme = localStorage.getItem('graph_theme');
-    if (savedTheme) setTheme(savedTheme);
-    else setTheme('light');
-    renderColorBar();
-
-    // ========== ИСКРЫ ColaLip ==========
-    function createSpark(parent) {
+    // Искры для всего
+    function createSpark(parent, className = 'spark-achievement') {
         const spark = document.createElement('div');
-        spark.className = 'spark';
+        spark.className = className;
         const rect = parent.getBoundingClientRect();
-        spark.style.left = Math.random() * rect.width + 'px';
-        spark.style.top = Math.random() * rect.height + 'px';
-        parent.appendChild(spark);
-        setTimeout(() => spark.remove(), 1000);
+        spark.style.left = rect.left + Math.random() * rect.width + 'px';
+        spark.style.top = rect.top + Math.random() * rect.height + 'px';
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 800);
+    }
+
+    function addSparksToCharts() {
+        const pieDiv = document.getElementById('categoryPieChart');
+        const gymDiv = document.getElementById('gymChart');
+        if(pieDiv) setInterval(() => { for(let i=0;i<4;i++) setTimeout(()=>createSpark(pieDiv, 'spark-chart'), i*150); }, 4000);
+        if(gymDiv) setInterval(() => { for(let i=0;i<3;i++) setTimeout(()=>createSpark(gymDiv, 'spark-chart'), i*180); }, 4500);
     }
 
     function initColaLip() {
         const nick = "ColaLip";
         const container = document.getElementById('colalipSingle');
         container.innerHTML = '';
-        [...nick].forEach((ch, idx) => {
-            let span = document.createElement('span');
-            span.className = 'colalip-char';
-            span.textContent = ch;
-            span.style.animationDelay = idx * 0.05 + 's';
-            container.appendChild(span);
-        });
-        setInterval(() => {
-            if (document.body.contains(container)) {
-                for (let i = 0; i < 5; i++) setTimeout(() => createSpark(container), i * 100);
-            }
-        }, 850);
+        [...nick].forEach((ch, idx) => { let span = document.createElement('span'); span.className = 'colalip-char'; span.textContent = ch; span.style.animationDelay = idx * 0.05 + 's'; container.appendChild(span); });
+        setInterval(() => { if(document.body.contains(container)) for(let i=0;i<6;i++) setTimeout(()=>createSpark(container, 'spark-achievement'), i*100); }, 900);
     }
 
-    // ========== ФОРМАТЫ ДАТ / ВРЕМЕНИ ==========
-    function formatDateRussian(dateStr) {
-        let p = dateStr.split(' ')[0];
-        if (p.includes('T')) p = p.split('T')[0];
-        let [y, m, d] = p.split('-');
-        if (!y || !m || !d) return dateStr;
-        return `${parseInt(d)} ${monthNames[parseInt(m) - 1]} ${y}`;
-    }
+    function formatDateRussian(d){ let p=d.split(' ')[0]; if(p.includes('T')) p=p.split('T')[0]; let [y,m,day]=p.split('-'); return `${parseInt(day)} ${monthNames[parseInt(m)-1]} ${y}`; }
+    function extractTime(d){ let p=d.split(' '); if(p.length>1) return p[1].split('.')[0]; if(d.includes('T')) return d.split('T')[1].split('.')[0]; return ''; }
+    function getAxisColor(){ return (document.body.classList.contains('dark')||document.body.classList.contains('cosmic'))?'#eef2f7':'#1a2a3a'; }
+    function getGridColor(){ return (document.body.classList.contains('dark')||document.body.classList.contains('cosmic'))?'#334455':'#ccccdd'; }
 
-    function extractTime(dateStr) {
-        let parts = dateStr.split(' ');
-        if (parts.length > 1) return parts[1].split('.')[0];
-        if (dateStr.includes('T')) return dateStr.split('T')[1].split('.')[0];
-        return '';
-    }
+    async function fetchData(){ const res=await fetch(CSV_URL); const text=await res.text(); const rows=text.split("\n").slice(1); allRecords=[]; for(let row of rows){ let cols=row.split(","); if(cols.length>=4 && cols[0] && cols[3]){ let rawDate=cols[0].trim(); let dateOnly=rawDate.split(' ')[0]; if(dateOnly.includes('T')) dateOnly=dateOnly.split('T')[0]; let points=parseFloat(cols[3].trim().replace(',','.')); if(isNaN(points)) continue; let cat=cols[1]||"Другое"; if(cat==="Финансы") points*=0.0002; if(cat==="Английский"||cat==="Чтение") cat="Развитие"; allRecords.push({date:dateOnly, time:extractTime(rawDate), category:cat, points:points}); } } }
 
-    function getAxisColor() {
-        return (document.body.classList.contains('dark') || document.body.classList.contains('cosmic')) ? '#eef2f7' : '#1a2a3a';
-    }
-    function getGridColor() {
-        return (document.body.classList.contains('dark') || document.body.classList.contains('cosmic')) ? '#334455' : '#ccccdd';
-    }
+    function filterPeriod(data, period=activePeriod){ if(period==='all') return data; const now=new Date(); const limit=new Date(); limit.setDate(now.getDate()-(period==='week'?7:30)); return data.filter(d=>new Date(d.date)>=limit); }
 
-    // ========== ЗАГРУЗКА ДАННЫХ ==========
-    async function fetchData() {
-        const res = await fetch(CSV_URL);
-        const text = await res.text();
-        const rows = text.split("\n").slice(1);
-        allRecords = [];
-        for (let row of rows) {
-            let cols = row.split(",");
-            if (cols.length >= 4 && cols[0] && cols[3]) {
-                let rawDate = cols[0].trim();
-                let dateOnly = rawDate.split(' ')[0];
-                if (dateOnly.includes('T')) dateOnly = dateOnly.split('T')[0];
-                let points = parseFloat(cols[3].trim().replace(',', '.'));
-                if (isNaN(points)) continue;
-                let cat = cols[1] || "Другое";
-                if (cat === "Финансы") points = points * 0.0002;
-                if (cat === "Английский" || cat === "Чтение") cat = "Развитие";
-                allRecords.push({ date: dateOnly, time: extractTime(rawDate), category: cat, points: points });
-            }
-        }
-    }
+    function animateNumber(el,target,dec=1){ const dur=800,start=0,startTime=performance.now(); function upd(t){ let prog=Math.min(1,(t-startTime)/dur); let cur=start+(target-start)*prog; el.innerText=cur.toFixed(dec); if(prog<1) requestAnimationFrame(upd); else el.innerText=target.toFixed(dec); } requestAnimationFrame(upd); }
+    function updateStats(dates,totalByDate){ let total=totalByDate.reduce((a,b)=>a+b,0), days=dates.length, avg=days?total/days:0, best=days?Math.max(...totalByDate):0; animateNumber(document.getElementById('totalPoints'),total,1); animateNumber(document.getElementById('totalDays'),days,0); animateNumber(document.getElementById('avgPoints'),avg,1); animateNumber(document.getElementById('bestDay'),best,1); }
+    function aggregate(data,filterCat){ const byDate=new Map(); for(let rec of data){ if(filterCat!=='all'&&rec.category!==filterCat) continue; byDate.set(rec.date,(byDate.get(rec.date)||0)+rec.points); } let dates=Array.from(byDate.keys()).sort(); let points=dates.map(d=>byDate.get(d)); let traces=[{x:dates,y:points,mode:'lines+markers',name:filterCat==='all'?'📈 Общага (сумма)':filterCat,line:{width:4,color:filterCat==='all'?'#1c4966':'#ff9800'},marker:{size:7}}]; return {traces,dates,totalByDate:points}; }
 
-    function filterPeriod(data, period = activePeriod) {
-        if (period === 'all') return data;
-        const now = new Date();
-        const limit = new Date();
-        limit.setDate(now.getDate() - (period === 'week' ? 7 : 30));
-        return data.filter(d => new Date(d.date) >= limit);
-    }
+    function renderMonthCompare(){ let now=new Date(), curMonth=now.getMonth(), curYear=now.getFullYear(), prevMonth=curMonth===0?11:curMonth-1, prevYear=curMonth===0?curYear-1:curYear; function getData(y,m){ let f=allRecords.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y && d.getMonth()===m;}); let map=new Map(); for(let r of f) map.set(r.date,(map.get(r.date)||0)+r.points); let dates=Array.from(map.keys()).sort(); let points=dates.map(d=>map.get(d)); return {dates:dates.map(d=>formatDateRussian(d)),points}; } let cur=getData(curYear,curMonth), prev=getData(prevYear,prevMonth); let layout={xaxis:{tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:45,r:20,t:45,b:60}}; Plotly.newPlot('currentMonthChart',[{x:cur.dates,y:cur.points,mode:'lines+markers',name:'Текущий месяц',line:{color:'#4caf50',width:3}}],{...layout,title:`📅 ${monthNames[curMonth]} ${curYear}`}); Plotly.newPlot('previousMonthChart',[{x:prev.dates,y:prev.points,mode:'lines+markers',name:'Прошлый месяц',line:{color:'#ff9800',width:3}}],{...layout,title:`📅 ${monthNames[prevMonth]} ${prevYear}`}); }
 
-    // ========== АНИМАЦИЯ БАЛЛОВ ==========
-    function animateNumber(el, target, decimals = 1) {
-        const duration = 800;
-        const startTime = performance.now();
-        function update(now) {
-            let progress = Math.min(1, (now - startTime) / duration);
-            let current = progress * target;
-            el.innerText = current.toFixed(decimals);
-            if (progress < 1) requestAnimationFrame(update);
-            else el.innerText = target.toFixed(decimals);
-        }
-        requestAnimationFrame(update);
-    }
+    function renderForecast(){ let daysMap={week:7,month:30,year:365}; let targetDays=daysMap[forecastPeriod]; let filtered=allRecords.filter(r=>new Date(r.date)>=new Date(Date.now()-targetDays*86400000)); let byDay=new Map(); for(let r of filtered) byDay.set(r.date,(byDay.get(r.date)||0)+r.points); let daily=[...byDay.values()]; if(daily.length===0){ document.getElementById('forecastValue').innerText='—'; document.getElementById('forecastText').innerText='Нет данных'; return; } let avg=daily.reduce((a,b)=>a+b,0)/daily.length; let forecast=Math.round(avg*targetDays); let totalNow=allRecords.reduce((s,r)=>s+r.points,0); document.getElementById('forecastValue').innerHTML=`+${forecast} баллов`; document.getElementById('forecastText').innerHTML=`Текущий темп ${avg.toFixed(1)} баллов/день → через ${targetDays} дней ≈ <strong>${totalNow+forecast}</strong> баллов. Дальше — больше!`; }
 
-    function updateStats(dates, totalByDate) {
-        let total = totalByDate.reduce((a, b) => a + b, 0);
-        let days = dates.length;
-        let avg = days ? total / days : 0;
-        let best = days ? Math.max(...totalByDate) : 0;
-        animateNumber(document.getElementById('totalPoints'), total, 1);
-        animateNumber(document.getElementById('totalDays'), days, 0);
-        animateNumber(document.getElementById('avgPoints'), avg, 1);
-        animateNumber(document.getElementById('bestDay'), best, 1);
-    }
+    function renderAchievements(){ let totalPoints=allRecords.reduce((s,r)=>s+r.points,0); let totalDays=new Set(allRecords.map(r=>r.date)).size; let sportDays=new Set(allRecords.filter(r=>r.category==='Спорт').map(r=>r.date)).size; let maxSport=Math.max(...allRecords.filter(r=>r.category==='Спорт').map(r=>r.points),0); let studyPoints=allRecords.filter(r=>r.category==='Учёба').reduce((s,r)=>s+r.points,0); let achievements=[{name:'💯 Первая сотня',desc:'100 баллов',check:totalPoints>=100,emoji:'🎯'},{name:'🌟 500 баллов',check:totalPoints>=500,emoji:'⭐'},{name:'🏆 1000 баллов',check:totalPoints>=1000,emoji:'🏆'},{name:'📅 7 дней',check:totalDays>=7,emoji:'📆'},{name:'🎖️ 30 дней',check:totalDays>=30,emoji:'🎖️'},{name:'🏋️ Спортсмен',desc:'10+ дней спорта',check:sportDays>=10,emoji:'🏋️'},{name:'💪 Рекордсмен',desc:'5+ баллов за спорт',check:maxSport>=5,emoji:'💪'},{name:'📚 Учёный',desc:'20+ учёбы',check:studyPoints>=20,emoji:'📚'}]; let grid=document.getElementById('achievementsGrid'); let unlocked=achievements.filter(a=>a.check).length; grid.innerHTML=achievements.map((a,i)=>`<div class="achievement ${a.check?'unlocked':'locked'}" data-ach="${a.name}"><div class="achievement-emoji" style="font-size:2rem;">${a.emoji}</div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc||''}</div></div>`).join(''); document.querySelectorAll('.achievement').forEach(el=>{ el.addEventListener('click',(e)=>{ let name=el.dataset.ach; let toast=document.createElement('div'); toast.className='toast-notify'; toast.innerText=`🏅 ${name} — отличная работа, Сержант!`; document.body.appendChild(toast); setTimeout(()=>toast.remove(),2000); for(let s=0;s<8;s++) setTimeout(()=>createSpark(el,'spark-achievement'),s*50); }); if(el.classList.contains('unlocked')) setInterval(()=>{ if(Math.random()<0.3) createSpark(el,'spark-achievement'); },2500); }); let cntDiv=document.querySelector('.achievements-counter'); if(!cntDiv){ let nd=document.createElement('div'); nd.className='achievements-counter'; nd.style.marginTop='18px'; nd.style.textAlign='center'; nd.style.fontSize='1rem'; nd.innerHTML=`🏅 Получено: ${unlocked}/${achievements.length}`; grid.parentNode.appendChild(nd); } else cntDiv.innerHTML=`🏅 Получено: ${unlocked}/${achievements.length}`; }
 
-    function aggregate(data, filterCat) {
-        const byDate = new Map();
-        for (let rec of data) {
-            if (filterCat !== 'all' && rec.category !== filterCat) continue;
-            byDate.set(rec.date, (byDate.get(rec.date) || 0) + rec.points);
-        }
-        let dates = Array.from(byDate.keys()).sort();
-        let points = dates.map(d => byDate.get(d));
-        let traces = [{
-            x: dates,
-            y: points,
-            mode: 'lines+markers',
-            name: filterCat === 'all' ? '📈 Общага (сумма)' : filterCat,
-            line: { width: 4, color: filterCat === 'all' ? '#1c4966' : '#ff9800' },
-            marker: { size: 7 }
-        }];
-        return { traces, dates, totalByDate: points };
-    }
+    function updateSidebars(){ let today=new Date().toISOString().split('T')[0]; let todayPoints=allRecords.filter(r=>r.date===today).reduce((s,r)=>s+r.points,0); document.getElementById('todayPoints').innerText=todayPoints.toFixed(1); let totalPointsAll=allRecords.reduce((s,r)=>s+r.points,0); let nextRankGoal=500; let progress=Math.min(100,(totalPointsAll/nextRankGoal)*100); document.getElementById('rankProgressFill').style.width=progress+'%'; document.getElementById('rankNeedText').innerText=`${Math.max(0,nextRankGoal-totalPointsAll).toFixed(0)} до Старшего сержанта`; let lastWeek=filterPeriod(allRecords,'week'); let catSum={}; for(let r of lastWeek) catSum[r.category]=(catSum[r.category]||0)+r.points; let top=Object.entries(catSum).sort((a,b)=>b[1]-a[1]).slice(0,3); document.getElementById('topCategoriesList').innerHTML=top.map(([c,p])=>`<div class="top-category-item"><span>${c}</span><span style="font-weight:800;">${p.toFixed(1)}</span></div>`).join('')||'—'; let gymData=allRecords.filter(r=>r.category==='Спорт'&&r.date>=new Date(Date.now()-30*86400000).toISOString().split('T')[0]); let gymByDate=new Map(); for(let r of gymData) gymByDate.set(r.date,(gymByDate.get(r.date)||0)+r.points); let gymDates=[...gymByDate.keys()].sort().slice(-12); let gymPoints=gymDates.map(d=>gymByDate.get(d)); Plotly.newPlot('gymChart',[{x:gymDates,y:gymPoints,mode:'lines+markers',name:'Спорт (баллы)',line:{color:'#ff8c00',width:3}}],{margin:{l:45,r:25,t:35,b:50},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',xaxis:{tickangle:0,color:getAxisColor()},yaxis:{color:getAxisColor()}}); let catTotal=allRecords.reduce((acc,r)=>{acc[r.category]=(acc[r.category]||0)+r.points; return acc;},{}); let pieLabels=Object.keys(catTotal).slice(0,6); let pieValues=pieLabels.map(l=>catTotal[l]); Plotly.newPlot('categoryPieChart',[{labels:pieLabels,values:pieValues,type:'pie',marker:{colors:['#4CAF50','#FF9800','#E91E63','#00BCD4','#8BC34A','#9C27B0'],line:{color:'gold',width:3}},textinfo:'percent',hole:0.4}],{margin:{l:15,r:15,t:40,b:15},paper_bgcolor:'rgba(0,0,0,0)',showlegend:true,legend:{font:{size:12}}}); }
 
-    // ========== СРАВНЕНИЕ МЕСЯЦЕВ (ровные даты, русский формат) ==========
-    function renderMonthCompare() {
-        let now = new Date();
-        let curMonth = now.getMonth(), curYear = now.getFullYear();
-        let prevMonth = curMonth === 0 ? 11 : curMonth - 1;
-        let prevYear = curMonth === 0 ? curYear - 1 : curYear;
+    async function renderAll(){ await fetchData(); let filtered=filterPeriod(allRecords); let categories=[...new Set(filtered.map(r=>r.category))]; let select=document.getElementById('categorySelect'); select.innerHTML='<option value="all">📊 Все категории</option>'+categories.sort().map(c=>`<option value="${c}">${c}</option>`).join(''); if(selectedCategory!=='all'&&categories.includes(selectedCategory)) select.value=selectedCategory; else{ select.value='all'; selectedCategory='all'; } let {traces,dates,totalByDate}=aggregate(filtered,selectedCategory); updateStats(dates,totalByDate); let tickLabels=dates.map(d=>{ let rec=allRecords.find(r=>r.date===d); let time=rec?.time||''; let date=formatDateRussian(d); return time?`<b>${time}</b><br>${date}`:date;}); Plotly.newPlot('mainChart',traces,{xaxis:{ticktext:tickLabels,tickvals:dates,type:'category',tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},legend:{orientation:'h',y:-0.15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:50,r:30,t:55,b:85}},{responsive:true}); renderMonthCompare(); renderForecast(); renderAchievements(); updateSidebars(); }
 
-        function getMonthData(year, month) {
-            let filtered = allRecords.filter(r => {
-                let d = new Date(r.date);
-                return d.getFullYear() === year && d.getMonth() === month;
-            });
-            let map = new Map();
-            for (let r of filtered) map.set(r.date, (map.get(r.date) || 0) + r.points);
-            let dates = Array.from(map.keys()).sort();
-            let points = dates.map(d => map.get(d));
-            let formatted = dates.map(d => formatDateRussian(d));
-            return { dates: formatted, points };
-        }
-
-        let cur = getMonthData(curYear, curMonth);
-        let prev = getMonthData(prevYear, prevMonth);
-        let layout = {
-            xaxis: { tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
-            yaxis: { gridcolor: getGridColor(), color: getAxisColor() },
-            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 45, r: 20, t: 45, b: 60 }
-        };
-        Plotly.newPlot('currentMonthChart', [{ x: cur.dates, y: cur.points, mode: 'lines+markers', name: 'Текущий месяц', line: { color: '#4caf50', width: 3 } }], { ...layout, title: `📅 ${monthNames[curMonth]} ${curYear}` });
-        Plotly.newPlot('previousMonthChart', [{ x: prev.dates, y: prev.points, mode: 'lines+markers', name: 'Прошлый месяц', line: { color: '#ff9800', width: 3 } }], { ...layout, title: `📅 ${monthNames[prevMonth]} ${prevYear}` });
-    }
-
-    // ПРОГНОЗ
-    function renderForecast() {
-        let last30 = filterPeriod(allRecords, 'month');
-        let byDay = new Map();
-        for (let r of last30) byDay.set(r.date, (byDay.get(r.date) || 0) + r.points);
-        let daily = [...byDay.values()];
-        if (daily.length === 0) {
-            document.getElementById('forecastValue').innerText = '—';
-            document.getElementById('forecastText').innerText = 'Недостаточно данных';
-            return;
-        }
-        let avg = daily.reduce((a, b) => a + b, 0) / daily.length;
-        let forecast = (avg * 30).toFixed(0);
-        let totalNow = allRecords.reduce((s, r) => s + r.points, 0);
-        document.getElementById('forecastValue').innerHTML = `+${forecast} баллов`;
-        document.getElementById('forecastText').innerHTML = `Текущий темп ${avg.toFixed(1)} баллов/день → через месяц ≈ <strong>${(totalNow + parseFloat(forecast)).toFixed(0)}</strong> баллов. Дальше — больше!`;
-    }
-
-    // ДОСТИЖЕНИЯ (полный список)
-    function renderAchievements() {
-        let totalPoints = allRecords.reduce((s, r) => s + r.points, 0);
-        let totalDays = new Set(allRecords.map(r => r.date)).size;
-        let sportDays = new Set(allRecords.filter(r => r.category === 'Спорт').map(r => r.date)).size;
-        let maxSport = Math.max(...allRecords.filter(r => r.category === 'Спорт').map(r => r.points), 0);
-        let studyPoints = allRecords.filter(r => r.category === 'Учёба').reduce((s, r) => s + r.points, 0);
-        let achievements = [
-            { name: '💯 Первая сотня', desc: '100 баллов', check: totalPoints >= 100, emoji: '🎯' },
-            { name: '🌟 500 баллов', check: totalPoints >= 500, emoji: '⭐' },
-            { name: '🏆 1000 баллов', check: totalPoints >= 1000, emoji: '🏆' },
-            { name: '📅 7 дней', desc: 'активность 7 дней', check: totalDays >= 7, emoji: '📆' },
-            { name: '🎖️ 30 дней', check: totalDays >= 30, emoji: '🎖️' },
-            { name: '🏋️ Спортсмен', desc: '10+ дней спорта', check: sportDays >= 10, emoji: '🏋️' },
-            { name: '💪 Рекордсмен', desc: '5+ баллов за спорт', check: maxSport >= 5, emoji: '💪' },
-            { name: '📚 Учёный', desc: '20+ учёбы', check: studyPoints >= 20, emoji: '📚' }
-        ];
-        let grid = document.getElementById('achievementsGrid');
-        let unlocked = achievements.filter(a => a.check).length;
-        grid.innerHTML = achievements.map(a => `<div class="achievement ${a.check ? 'unlocked' : 'locked'}"><div class="achievement-emoji">${a.emoji}</div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc || ''}</div></div>`).join('');
-        let counterDiv = document.querySelector('.achievements-counter');
-        if (!counterDiv) {
-            let newDiv = document.createElement('div');
-            newDiv.className = 'achievements-counter';
-            newDiv.style.marginTop = '16px';
-            newDiv.style.textAlign = 'center';
-            newDiv.style.fontSize = '0.9rem';
-            newDiv.innerHTML = `🏅 Получено достижений: ${unlocked} из ${achievements.length}`;
-            grid.parentNode.appendChild(newDiv);
-        } else {
-            counterDiv.innerHTML = `🏅 Получено достижений: ${unlocked} из ${achievements.length}`;
-        }
-    }
-
-    // САЙДБАРЫ (увеличенные данные)
-    function updateSidebars() {
-        let today = new Date().toISOString().split('T')[0];
-        let todayPoints = allRecords.filter(r => r.date === today).reduce((s, r) => s + r.points, 0);
-        document.getElementById('todayPoints').innerText = todayPoints.toFixed(1);
-        let totalPointsAll = allRecords.reduce((s, r) => s + r.points, 0);
-        let nextRankGoal = 500;
-        let progress = Math.min(100, (totalPointsAll / nextRankGoal) * 100);
-        document.getElementById('rankProgressFill').style.width = progress + '%';
-        document.getElementById('rankNeedText').innerText = `${Math.max(0, nextRankGoal - totalPointsAll).toFixed(0)} до Старшего сержанта`;
-
-        let lastWeek = filterPeriod(allRecords, 'week');
-        let catSum = {};
-        for (let r of lastWeek) catSum[r.category] = (catSum[r.category] || 0) + r.points;
-        let top = Object.entries(catSum).sort((a, b) => b[1] - a[1]).slice(0, 3);
-        document.getElementById('topCategoriesList').innerHTML = top.map(([c, p]) => `<div class="top-category-item"><span>${c}</span><span style="font-weight:800;">${p.toFixed(1)}</span></div>`).join('') || '—';
-
-        let gymData = allRecords.filter(r => r.category === 'Спорт' && r.date >= new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]);
-        let gymByDate = new Map();
-        for (let r of gymData) gymByDate.set(r.date, (gymByDate.get(r.date) || 0) + r.points);
-        let gymDates = [...gymByDate.keys()].sort().slice(-12);
-        let gymPoints = gymDates.map(d => gymByDate.get(d));
-        Plotly.newPlot('gymChart', [{ x: gymDates, y: gymPoints, mode: 'lines+markers', name: 'Спорт (баллы)', line: { color: '#ff8c00', width: 3 } }], { margin: { l: 40, r: 20, t: 30, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', xaxis: { tickangle: 0, color: getAxisColor() }, yaxis: { color: getAxisColor() } });
-
-        let catTotal = allRecords.reduce((acc, r) => { acc[r.category] = (acc[r.category] || 0) + r.points; return acc; }, {});
-        let pieLabels = Object.keys(catTotal).slice(0, 6);
-        let pieValues = pieLabels.map(l => catTotal[l]);
-        Plotly.newPlot('categoryPieChart', [{ labels: pieLabels, values: pieValues, type: 'pie', marker: { colors: ['#4CAF50', '#FF9800', '#E91E63', '#00BCD4', '#8BC34A', '#9C27B0'] }, textinfo: 'percent', hole: 0.35 }], { margin: { l: 10, r: 10, t: 30, b: 10 }, paper_bgcolor: 'rgba(0,0,0,0)', showlegend: true, legend: { font: { size: 11 } } });
-    }
-
-    async function renderAll() {
-        await fetchData();
-        let filtered = filterPeriod(allRecords);
-        let categories = [...new Set(filtered.map(r => r.category))];
-        let select = document.getElementById('categorySelect');
-        select.innerHTML = '<option value="all">📊 Все категории</option>' + categories.sort().map(c => `<option value="${c}">${c}</option>`).join('');
-        if (selectedCategory !== 'all' && categories.includes(selectedCategory)) select.value = selectedCategory;
-        else { select.value = 'all'; selectedCategory = 'all'; }
-
-        let { traces, dates, totalByDate } = aggregate(filtered, selectedCategory);
-        updateStats(dates, totalByDate);
-
-        let tickLabels = dates.map(d => {
-            let rec = allRecords.find(r => r.date === d);
-            let time = rec?.time || '';
-            let date = formatDateRussian(d);
-            return time ? `<b>${time}</b><br>${date}` : date;
-        });
-
-        Plotly.newPlot('mainChart', traces, {
-            xaxis: { ticktext: tickLabels, tickvals: dates, type: 'category', tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
-            yaxis: { gridcolor: getGridColor(), color: getAxisColor() },
-            legend: { orientation: 'h', y: -0.15 },
-            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 50, r: 30, t: 55, b: 85 }
-        }, { responsive: true });
-
-        renderMonthCompare();
-        renderForecast();
-        renderAchievements();
-        updateSidebars();
-    }
-
-    // ИНИЦИАЛИЗАЦИЯ
-    document.querySelectorAll('.period-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activePeriod = btn.dataset.period;
-            renderAll();
-        });
-    });
-    document.getElementById('categorySelect').addEventListener('change', (e) => {
-        selectedCategory = e.target.value;
-        renderAll();
-    });
+    document.querySelectorAll('.period-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); activePeriod=btn.dataset.period; renderAll(); }));
+    document.getElementById('categorySelect').addEventListener('change',e=>{ selectedCategory=e.target.value; renderAll(); });
+    document.querySelectorAll('.forecast-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ document.querySelectorAll('.forecast-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); forecastPeriod=btn.dataset.fperiod; renderForecast(); }); });
 
     initColaLip();
+    addSparksToCharts();
     renderAll();
 </script>
 </body>
