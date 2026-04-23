@@ -14,108 +14,45 @@
             min-height: 100vh;
         }
         
-        /* ===== БОКОВАЯ ПАНЕЛЬ ===== */
-        .sidebar {
+        /* ===== ПРАВАЯ ПАНЕЛЬ (цвета) ===== */
+        .color-panel {
             position: fixed;
-            left: -280px;
-            top: 0;
-            width: 280px;
-            height: 100vh;
+            right: 20px;
+            top: 20px;
+            z-index: 1000;
             background: rgba(25, 35, 45, 0.95);
             backdrop-filter: blur(12px);
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            padding: 20px;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
-            border-right: 1px solid rgba(255,255,255,0.1);
-            color: #eef;
-        }
-        
-        .sidebar.open {
-            left: 0;
-        }
-        
-        .sidebar-toggle {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-            z-index: 1001;
-            background: #1f6e9e;
-            border: none;
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-            color: white;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        .sidebar-toggle:hover {
-            background: #2c8ab8;
-            transform: scale(1.02);
-        }
-        
-        .sidebar h3 {
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-            border-bottom: 2px solid #4caf50;
-            display: inline-block;
-            padding-bottom: 8px;
-        }
-        
-        .theme-grid {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .theme-option {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
+        .color-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             cursor: pointer;
             transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
         
-        .theme-option:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        .color-dot:hover {
+            transform: scale(1.1);
         }
         
-        .theme-option.active {
+        .color-dot.active {
             border: 3px solid gold;
-            transform: scale(1.02);
-        }
-        
-        .sidebar-section {
-            margin-top: 30px;
-        }
-        
-        .sidebar-section p {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            margin-top: 20px;
-            text-align: center;
+            transform: scale(1.05);
         }
         
         /* ===== ОСНОВНОЙ КОНТЕЙНЕР ===== */
         .container {
-            max-width: 100%;
-            margin: 0;
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 20px 30px;
-            transition: padding-left 0.3s ease;
-        }
-        
-        body.sidebar-open .container {
-            padding-left: 70px;
         }
         
         .card {
@@ -137,7 +74,7 @@
         }
         
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             background: linear-gradient(120deg, #1a4972, #2c7ab1);
             -webkit-background-clip: text;
             background-clip: text;
@@ -217,19 +154,85 @@
         select { cursor: pointer; background: #e4ebf3; }
         button.active { background: #1f6e9e; color: white; }
         
-        #mainChart { width: 100%; height: 600px; }
+        #mainChart, #compareChart {
+            width: 100%;
+            height: 450px;
+        }
+        
+        .double-chart {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .achievements-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .achievement {
+            background: rgba(255,255,255,0.6);
+            border-radius: 20px;
+            padding: 12px 18px;
+            text-align: center;
+            min-width: 100px;
+            transition: 0.2s;
+            cursor: default;
+        }
+        
+        .achievement.locked {
+            opacity: 0.5;
+            filter: grayscale(0.3);
+        }
+        
+        .achievement.unlocked {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,180,0,0.1));
+            border: 1px solid gold;
+        }
+        
+        .achievement-emoji {
+            font-size: 2rem;
+        }
+        
+        .achievement-name {
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+        
+        .achievement-desc {
+            font-size: 0.65rem;
+            opacity: 0.7;
+        }
+        
+        .forecast-card {
+            background: linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .forecast-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #4caf50;
+        }
+        
         .legend-note { text-align: center; font-size: 0.7rem; margin-top: 15px; opacity: 0.7; }
         footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.6; }
         
-        @media (max-width: 700px) {
+        @media (max-width: 900px) {
+            .double-chart { grid-template-columns: 1fr; }
+            .color-panel { right: 10px; top: 10px; padding: 8px 12px; gap: 6px; }
+            .color-dot { width: 28px; height: 28px; }
             .container { padding: 10px 15px; }
             .card { padding: 15px 20px; }
-            .stats-grid { flex-direction: column; }
-            #mainChart { height: 450px; }
-            .sidebar-toggle { left: 10px; top: 10px; padding: 8px 12px; font-size: 0.8rem; }
         }
         
-        /* ===== ТЕМЫ (динамические) ===== */
+        /* Темы */
         body.light { background: linear-gradient(135deg, #f0f4fa 0%, #e2eaf5 100%); color: #1a2a3a; }
         body.dark { background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%); color: #eef2f7; }
         body.mint { background: linear-gradient(135deg, #d4e4d7 0%, #bdd4c3 100%); color: #1e3a2f; }
@@ -242,12 +245,10 @@
         body.cosmic { background: linear-gradient(135deg, #1a0f2e 0%, #2d1b4e 100%); color: #d4c4e8; }
         
         body.dark .card, body.cosmic .card { background: rgba(30,40,50,0.92); color: #eef2f7; }
-        body.mint .card { background: rgba(240,255,240,0.92); }
-        body.warm .card { background: rgba(255,248,240,0.92); }
+        body.mint .card, body.forest .card { background: rgba(240,255,240,0.92); }
+        body.warm .card, body.sunset .card { background: rgba(255,248,240,0.92); }
         body.lavender .card { background: rgba(255,245,255,0.92); }
         body.ocean .card { background: rgba(255,255,255,0.92); }
-        body.sunset .card { background: rgba(255,248,240,0.92); }
-        body.forest .card { background: rgba(240,255,240,0.92); }
         body.cherry .card { background: rgba(255,240,240,0.92); }
         
         body.dark button, body.dark select,
@@ -256,23 +257,13 @@
     </style>
 </head>
 <body class="light">
-    <!-- Кнопка открытия панели -->
-    <button class="sidebar-toggle" id="sidebarToggle">🎨 Цвета</button>
-    
-    <!-- Боковая панель -->
-    <div class="sidebar" id="sidebar">
-        <h3>🎨 Цветовые темы</h3>
-        <div class="theme-grid" id="themeGrid"></div>
-        <div class="sidebar-section">
-            <p>💡 Кликни на тему<br>чтобы изменить оформление</p>
-            <p style="font-size:0.7rem">✨ Выбрано: <span id="currentThemeName">Светлая</span></p>
-        </div>
-    </div>
+    <!-- Правая панель выбора цвета -->
+    <div class="color-panel" id="colorPanel"></div>
 
     <div class="container">
         <div class="card">
             <div class="header-flex">
-                <h1>🔥 Полный анализ прогресса</h1>
+                <h1>🏆 Полный анализ прогресса</h1>
             </div>
             <div class="sub">Твой путь к 0.1% • каждая цифра имеет значение</div>
             <div class="stats-grid" id="statsPanel">
@@ -283,6 +274,7 @@
             </div>
         </div>
         
+        <!-- Основной график -->
         <div class="card">
             <div class="controls-row">
                 <div class="period-group">
@@ -296,9 +288,33 @@
                     </select>
                 </div>
             </div>
-            <div id="mainChart" style="height: 600px; width: 100%;"></div>
-            <div class="legend-note">💡 Нажмите на название категории в легенде, чтобы скрыть/показать линию</div>
+            <div id="mainChart" style="height: 500px; width: 100%;"></div>
         </div>
+        
+        <!-- Сравнение с прошлым месяцем (№13) -->
+        <div class="card">
+            <h3>📊 Сравнение с прошлым месяцем</h3>
+            <div class="double-chart">
+                <div id="currentMonthChart" style="height: 350px;"></div>
+                <div id="previousMonthChart" style="height: 350px;"></div>
+            </div>
+        </div>
+        
+        <!-- Прогноз на месяц (№12) -->
+        <div class="card">
+            <h3>🔮 Прогноз на следующий месяц</h3>
+            <div class="forecast-card" id="forecastCard">
+                <div class="forecast-number" id="forecastValue">—</div>
+                <div id="forecastText">Загрузка данных...</div>
+            </div>
+        </div>
+        
+        <!-- Доска достижений (№11) -->
+        <div class="card">
+            <h3>🏅 Достижения</h3>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+        
         <footer>Данные из Google Sheets • обновляются при загрузке</footer>
     </div>
 
@@ -314,45 +330,44 @@
         
         const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
         
-        // ========== ТЕМЫ ==========
+        // ========== ТЕМЫ (10 цветов) ==========
         const themes = [
-            { id: 'light', name: 'Светлая', emoji: '☀️', color: '#f0f4fa' },
-            { id: 'dark', name: 'Тёмная', emoji: '🌙', color: '#1a2a3a' },
-            { id: 'mint', name: 'Мятная', emoji: '🌿', color: '#bdd4c3' },
-            { id: 'warm', name: 'Тёплая', emoji: '🔥', color: '#f5d5b3' },
-            { id: 'lavender', name: 'Лавандовая', emoji: '🪻', color: '#d4c4e8' },
-            { id: 'ocean', name: 'Океан', emoji: '🌊', color: '#a8d0e6' },
-            { id: 'sunset', name: 'Закат', emoji: '🌅', color: '#f0a896' },
-            { id: 'forest', name: 'Лесная', emoji: '🌲', color: '#a8c9a3' },
-            { id: 'cherry', name: 'Вишнёвая', emoji: '🍒', color: '#e8b0b0' },
-            { id: 'cosmic', name: 'Космическая', emoji: '🚀', color: '#2d1b4e' }
+            { id: 'light', name: '☀️', color: '#f0f4fa' },
+            { id: 'dark', name: '🌙', color: '#1a2a3a' },
+            { id: 'mint', name: '🌿', color: '#bdd4c3' },
+            { id: 'warm', name: '🔥', color: '#f5d5b3' },
+            { id: 'lavender', name: '🪻', color: '#d4c4e8' },
+            { id: 'ocean', name: '🌊', color: '#a8d0e6' },
+            { id: 'sunset', name: '🌅', color: '#f0a896' },
+            { id: 'forest', name: '🌲', color: '#a8c9a3' },
+            { id: 'cherry', name: '🍒', color: '#e8b0b0' },
+            { id: 'cosmic', name: '🚀', color: '#2d1b4e' }
         ];
         
         function setTheme(themeId) {
             document.body.className = themeId;
             localStorage.setItem('graph_theme', themeId);
-            const theme = themes.find(t => t.id === themeId);
-            if (theme) document.getElementById('currentThemeName').innerText = theme.name;
             render();
+            renderAchievements();
         }
         
-        function renderThemeGrid() {
-            const grid = document.getElementById('themeGrid');
+        function renderColorPanel() {
+            const panel = document.getElementById('colorPanel');
             const saved = localStorage.getItem('graph_theme') || 'light';
-            grid.innerHTML = themes.map(theme => `
-                <div class="theme-option ${saved === theme.id ? 'active' : ''}" 
+            panel.innerHTML = themes.map(theme => `
+                <div class="color-dot ${saved === theme.id ? 'active' : ''}" 
                      data-theme="${theme.id}"
-                     style="background: ${theme.color}; color: ${theme.id === 'cosmic' ? '#fff' : '#333'};">
-                    ${theme.emoji}
+                     style="background: ${theme.color};"
+                     title="${theme.id}">
                 </div>
             `).join('');
             
-            document.querySelectorAll('.theme-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    const themeId = opt.dataset.theme;
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const themeId = dot.dataset.theme;
                     setTheme(themeId);
-                    document.querySelectorAll('.theme-option').forEach(o => o.classList.remove('active'));
-                    opt.classList.add('active');
+                    document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
                 });
             });
         }
@@ -360,27 +375,7 @@
         const savedTheme = localStorage.getItem('graph_theme');
         if (savedTheme) setTheme(savedTheme);
         else setTheme('light');
-        renderThemeGrid();
-        
-        // ========== АНИМАЦИЯ СЧЁТЧИКА ==========
-        function animateNumber(element, target, decimals = 1) {
-            const duration = 1000;
-            const start = 0;
-            const startTime = performance.now();
-            
-            function update(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(1, elapsed / duration);
-                const current = start + (target - start) * progress;
-                element.innerText = current.toFixed(decimals);
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                } else {
-                    element.innerText = target.toFixed(decimals);
-                }
-            }
-            requestAnimationFrame(update);
-        }
+        renderColorPanel();
         
         // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
         function formatDateRussian(dateStr) {
@@ -438,11 +433,11 @@
             }
         }
         
-        function filterPeriod(data) {
-            if (activePeriod === 'all') return data;
+        function filterPeriod(data, period = activePeriod) {
+            if (period === 'all') return data;
             const now = new Date();
             const limit = new Date();
-            limit.setDate(now.getDate() - (activePeriod === 'week' ? 7 : 30));
+            limit.setDate(now.getDate() - (period === 'week' ? 7 : 30));
             return data.filter(d => new Date(d.date) >= limit);
         }
         
@@ -488,16 +483,16 @@
             return { traces, dates, totalByDate, categories };
         }
         
-        function updateStatsWithAnimation(dates, totalByDate) {
+        function updateStats(dates, totalByDate) {
             const total = totalByDate.reduce((a,b)=>a+b,0);
             const days = dates.length;
-            const avg = days ? (total/days) : 0;
-            const best = days ? Math.max(...totalByDate) : 0;
-            
-            animateNumber(document.getElementById('totalPoints'), total, 1);
-            animateNumber(document.getElementById('totalDays'), days, 0);
-            animateNumber(document.getElementById('avgPoints'), avg, 1);
-            animateNumber(document.getElementById('bestDay'), best, 1);
+            const avg = days ? (total/days).toFixed(1) : 0;
+            const best = days ? Math.max(...totalByDate).toFixed(1) : 0;
+            document.getElementById('totalPoints').innerText = total.toFixed(1);
+            document.getElementById('totalDays').innerText = days;
+            document.getElementById('avgPoints').innerText = avg;
+            document.getElementById('bestDay').innerText = best;
+            return { total, days, avg: parseFloat(avg), best: parseFloat(best) };
         }
         
         function updateCategorySelect(categories) {
@@ -518,13 +513,157 @@
             }
         }
         
+        // ========== №13: СРАВНЕНИЕ С ПРОШЛЫМ МЕСЯЦЕМ ==========
+        function renderMonthCompare() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const lastMonthDate = new Date(currentYear, currentMonth - 1, 1);
+            const lastMonth = lastMonthDate.getMonth();
+            const lastYear = lastMonthDate.getFullYear();
+            
+            function getMonthData(year, month) {
+                const filtered = allRecords.filter(r => {
+                    const d = new Date(r.date);
+                    return d.getFullYear() === year && d.getMonth() === month;
+                });
+                const byDate = new Map();
+                for (let rec of filtered) {
+                    const date = rec.date;
+                    byDate.set(date, (byDate.get(date) || 0) + rec.points);
+                }
+                const dates = Array.from(byDate.keys()).sort();
+                const points = dates.map(d => byDate.get(d));
+                return { dates, points };
+            }
+            
+            const currentData = getMonthData(currentYear, currentMonth);
+            const lastData = getMonthData(lastYear, lastMonth);
+            
+            const layoutBase = {
+                xaxis: { title: '', gridcolor: getGridColor(), color: getAxisColor() },
+                yaxis: { title: 'Баллы', gridcolor: getGridColor(), color: getAxisColor() },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                margin: { l: 40, r: 20, t: 40, b: 40 }
+            };
+            
+            const currentTrace = {
+                x: currentData.dates,
+                y: currentData.points,
+                mode: 'lines+markers',
+                name: 'Текущий месяц',
+                line: { color: '#4caf50', width: 3 },
+                marker: { size: 6 }
+            };
+            
+            const lastTrace = {
+                x: lastData.dates,
+                y: lastData.points,
+                mode: 'lines+markers',
+                name: 'Прошлый месяц',
+                line: { color: '#ff9800', width: 3 },
+                marker: { size: 6 }
+            };
+            
+            Plotly.newPlot('currentMonthChart', [currentTrace], { ...layoutBase, title: `📅 ${monthNames[currentMonth]} ${currentYear}` });
+            Plotly.newPlot('previousMonthChart', [lastTrace], { ...layoutBase, title: `📅 ${monthNames[lastMonth]} ${lastYear}` });
+        }
+        
+        // ========== №12: ПРОГНОЗ НА МЕСЯЦ ==========
+        function renderForecast() {
+            const last30Data = filterPeriod(allRecords, 'month');
+            const dailyPoints = [];
+            const byDate = new Map();
+            for (let rec of last30Data) {
+                byDate.set(rec.date, (byDate.get(rec.date) || 0) + rec.points);
+            }
+            for (let points of byDate.values()) {
+                dailyPoints.push(points);
+            }
+            if (dailyPoints.length === 0) {
+                document.getElementById('forecastValue').innerText = '—';
+                document.getElementById('forecastText').innerText = 'Недостаточно данных для прогноза';
+                return;
+            }
+            const avgDaily = dailyPoints.reduce((a,b) => a + b, 0) / dailyPoints.length;
+            const forecast30 = (avgDaily * 30).toFixed(0);
+            const currentTotal = allRecords.reduce((sum, r) => sum + r.points, 0);
+            const newTotal = currentTotal + parseFloat(forecast30);
+            
+            document.getElementById('forecastValue').innerHTML = `+${forecast30} баллов`;
+            document.getElementById('forecastText').innerHTML = `При текущем темпе (${avgDaily.toFixed(1)} баллов/день) через месяц у тебя будет ≈ <strong>${newTotal.toFixed(0)}</strong> баллов. ${avgDaily > 5 ? '🔥 Отличный темп! Так держать!' : '💪 Можно и быстрее. Добавь спорт и английский!'}`;
+        }
+        
+        // ========== №11: ДОСТИЖЕНИЯ (геймификация) ==========
+        function calculateAchievements() {
+            const totalPoints = allRecords.reduce((sum, r) => sum + r.points, 0);
+            const totalDays = new Set(allRecords.map(r => r.date)).size;
+            const avgDaily = totalDays ? totalPoints / totalDays : 0;
+            
+            const sportRecords = allRecords.filter(r => r.category === 'Спорт');
+            let maxSportPoints = 0;
+            let sportDays = new Set();
+            for (let rec of sportRecords) {
+                const date = rec.date;
+                sportDays.add(date);
+                if (rec.points > maxSportPoints) maxSportPoints = rec.points;
+            }
+            const sportDaysCount = sportDays.size;
+            
+            const studyRecords = allRecords.filter(r => r.category === 'Учёба');
+            let studyTotal = studyRecords.reduce((sum, r) => sum + r.points, 0);
+            
+            const achievements = [
+                { id: 'first100', name: '💯 Первая сотня', desc: 'Набрать 100 баллов', check: totalPoints >= 100, emoji: '🎯' },
+                { id: 'first500', name: '🌟 500 баллов', desc: 'Набрать 500 баллов', check: totalPoints >= 500, emoji: '⭐' },
+                { id: 'first1000', name: '🏆 1000 баллов', desc: 'Набрать 1000 баллов', check: totalPoints >= 1000, emoji: '🏆' },
+                { id: 'week7', name: '📅 7 дней подряд', desc: 'Активность 7 дней', check: totalDays >= 7, emoji: '📆' },
+                { id: 'month30', name: '🎖️ 30 дней', desc: 'Активность 30 дней', check: totalDays >= 30, emoji: '🎖️' },
+                { id: 'sportMaster', name: '🏋️ Спортсмен', desc: '10+ дней со спортом', check: sportDaysCount >= 10, emoji: '🏋️' },
+                { id: 'sportRecord', name: '💪 Рекордсмен', desc: '5+ баллов за спорт за день', check: maxSportPoints >= 5, emoji: '💪' },
+                { id: 'studyHard', name: '📚 Учёный', desc: '20+ баллов по учёбе всего', check: studyTotal >= 20, emoji: '📚' }
+            ];
+            
+            return achievements;
+        }
+        
+        function renderAchievements() {
+            const achievements = calculateAchievements();
+            const grid = document.getElementById('achievementsGrid');
+            const unlockedCount = achievements.filter(a => a.check).length;
+            
+            grid.innerHTML = achievements.map(ach => `
+                <div class="achievement ${ach.check ? 'unlocked' : 'locked'}">
+                    <div class="achievement-emoji">${ach.emoji}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                    <div class="achievement-desc">${ach.desc}</div>
+                </div>
+            `).join('');
+            
+            // Добавим счётчик
+            const existingCounter = document.querySelector('.achievements-counter');
+            if (!existingCounter) {
+                const counter = document.createElement('div');
+                counter.className = 'achievements-counter';
+                counter.style.marginTop = '15px';
+                counter.style.textAlign = 'center';
+                counter.style.fontSize = '0.8rem';
+                counter.innerHTML = `🏅 Получено достижений: ${unlockedCount} из ${achievements.length}`;
+                grid.parentNode.appendChild(counter);
+            } else {
+                existingCounter.innerHTML = `🏅 Получено достижений: ${unlockedCount} из ${achievements.length}`;
+            }
+        }
+        
         async function render() {
             await fetchData();
             const filtered = filterPeriod(allRecords);
             const allCats = [...new Set(filtered.map(r => r.category))];
             updateCategorySelect(allCats);
-            const { traces, dates, totalByDate, categories } = aggregate(filtered, selectedCategory);
-            updateStatsWithAnimation(dates, totalByDate);
+            const { traces, dates, totalByDate } = aggregate(filtered, selectedCategory);
+            updateStats(dates, totalByDate);
             
             let tickLabels = dates.map(d => {
                 let record = allRecords.find(r => r.date === d);
@@ -535,7 +674,7 @@
             });
             
             const layout = {
-                title: selectedCategory === 'all' ? '🔥 Прогресс по дням (Общага + все категории)' : `🔥 Прогресс по категории: ${selectedCategory}`,
+                title: selectedCategory === 'all' ? '🔥 Прогресс по дням' : `🔥 Категория: ${selectedCategory}`,
                 xaxis: { 
                     title: '', 
                     tickangle: 0, 
@@ -555,25 +694,12 @@
                 margin: { l: 50, r: 30, t: 60, b: 80 }
             };
             Plotly.newPlot('mainChart', traces, layout, { responsive: true });
+            
+            renderMonthCompare();
+            renderForecast();
+            renderAchievements();
         }
         
-        // ========== САЙДБАР ==========
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            document.body.classList.toggle('sidebar-open');
-        });
-        
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target) && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-                document.body.classList.remove('sidebar-open');
-            }
-        });
-        
-        // ========== КНОПКИ ПЕРИОДОВ ==========
         document.querySelectorAll('.period-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
