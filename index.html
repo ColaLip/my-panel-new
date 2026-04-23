@@ -9,42 +9,42 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            padding: 25px;
-            transition: background 0.3s ease, color 0.2s ease;
+            padding: 0;
+            margin: 0;
+            transition: background 0.3s ease;
             min-height: 100vh;
+            width: 100%;
         }
-        /* Тема 1: светлая (по умолчанию) */
+        /* Тема 1: светлая */
         body.light {
             background: linear-gradient(135deg, #f0f4fa 0%, #e2eaf5 100%);
             color: #1a2a3a;
         }
-        /* Тема 2: тёмная */
         body.dark {
             background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
             color: #eef2f7;
         }
-        /* Тема 3: приглушённая зелень */
         body.mint {
             background: linear-gradient(135deg, #d4e4d7 0%, #bdd4c3 100%);
             color: #1e3a2f;
         }
-        /* Тема 4: тёплая */
         body.warm {
             background: linear-gradient(135deg, #fde8cd 0%, #f5d5b3 100%);
             color: #4a3728;
         }
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px 30px;
         }
         .card {
             background: rgba(255,255,255,0.92);
             backdrop-filter: blur(2px);
-            border-radius: 32px;
-            padding: 25px;
+            border-radius: 28px;
+            padding: 25px 30px;
             margin-bottom: 25px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-            transition: background 0.2s;
+            width: 100%;
         }
         body.dark .card {
             background: rgba(30,40,50,0.92);
@@ -56,18 +56,24 @@
         body.warm .card {
             background: rgba(255,248,240,0.92);
         }
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
         h1 {
             font-size: 2rem;
             background: linear-gradient(120deg, #1a4972, #2c7ab1);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 8px;
+            margin: 0;
         }
         body.dark h1 {
             background: linear-gradient(120deg, #6ea8d4, #3c8db8);
             -webkit-background-clip: text;
-            background-clip: text;
         }
         .sub {
             border-left: 4px solid #2c7ab1;
@@ -104,7 +110,7 @@
             align-items: center;
             margin-bottom: 25px;
         }
-        .period-group, .cat-group, .theme-group {
+        .period-group, .theme-group {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -123,15 +129,36 @@
         .theme-btn { background: #ddd; font-size: 0.75rem; padding: 6px 16px; }
         body.dark button { background: #2a3a48; color: #eef; }
         body.dark button.active { background: #3c8db8; }
+        #mainChart {
+            width: 100%;
+            height: 600px;
+        }
         .legend-note { text-align: center; font-size: 0.7rem; margin-top: 15px; opacity: 0.7; }
+        .cat-filter-section {
+            margin-top: 10px;
+        }
+        .cat-filter-section div:first-child {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        #categoryFilter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
         footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.6; }
-        @media (max-width: 700px) { .stats-grid { flex-direction: column; } }
+        @media (max-width: 700px) {
+            .container { padding: 10px 15px; }
+            .card { padding: 15px 20px; }
+            .stats-grid { flex-direction: column; }
+            #mainChart { height: 450px; }
+        }
     </style>
 </head>
 <body class="light">
 <div class="container">
     <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div class="header-flex">
             <h1>📊 Полная аналитика прогресса</h1>
             <div class="theme-group">
                 <button class="theme-btn" data-theme="light">☀️ Светлая</button>
@@ -157,13 +184,13 @@
                 <button class="period-btn" data-period="month">🌙 30 дней</button>
             </div>
         </div>
-        <div id="mainChart" style="height: 550px;"></div>
+        <div id="mainChart" style="height: 600px; width: 100%;"></div>
         <div class="legend-note">💡 Кликайте по названиям категорий в легенде, чтобы скрыть/показать линию</div>
     </div>
 
-    <div class="card">
-        <div style="font-weight: 600; margin-bottom: 12px;">🎨 Фильтр категорий (нажми, чтобы скрыть)</div>
-        <div id="categoryFilter" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+    <div class="card cat-filter-section">
+        <div>🎨 Фильтр категорий (нажми, чтобы скрыть)</div>
+        <div id="categoryFilter"></div>
     </div>
     <footer>Данные из Google Sheets • обновляются при перезагрузке</footer>
 </div>
@@ -178,7 +205,6 @@
     let categoryColors = {};
     const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
 
-    // Переключение темы
     function setTheme(theme) {
         document.body.className = theme;
         localStorage.setItem('graph_theme', theme);
@@ -275,10 +301,10 @@
         categories.forEach(cat => {
             const btn = document.createElement('button');
             btn.innerText = cat;
-            btn.className = 'cat-btn';
             btn.style.padding = '6px 16px';
             btn.style.borderRadius = '30px';
             btn.style.background = hiddenCategories.has(cat) ? '#aaa' : '#e4ebf3';
+            btn.style.cursor = 'pointer';
             btn.onclick = () => {
                 if (hiddenCategories.has(cat)) hiddenCategories.delete(cat);
                 else hiddenCategories.add(cat);
@@ -294,7 +320,8 @@
             hovermode: 'closest',
             legend: { orientation: 'h', y: -0.15 },
             paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)'
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            margin: { l: 50, r: 30, t: 60, b: 70 }
         };
         Plotly.newPlot('mainChart', traces, layout, { responsive: true });
     }
