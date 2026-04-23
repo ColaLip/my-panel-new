@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои графики — премиум</title>
+    <title>Мои графики — ColaLip</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,27 +38,140 @@
             position: relative;
         }
         
-        .header-flex {
+        /* ===== ЗАГОЛОВОК С ГРАДИЕНТНЫМ ДВИЖЕНИЕМ ===== */
+        .animated-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            gap: 20px;
             flex-wrap: wrap;
             margin-bottom: 15px;
         }
         
-        h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(120deg, #1a4972, #2c7ab1);
+        .glow-text {
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700, #ffeb3b, #ffd700);
+            background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin: 0;
+            animation: gradientMove 3s ease infinite;
+            text-shadow: 0 0 10px rgba(255,215,0,0.3);
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+        
+        /* ===== СЛОЖНАЯ АНИМАЦИЯ ДЛЯ ColaLip ===== */
+        .colalip-wrapper {
+            display: inline-flex;
+            gap: 2px;
+            position: relative;
+        }
+        
+        .colalip-char {
+            display: inline-block;
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ff8c00, #ff69b4, #00bfff, #ffd700);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: liquidChar 2.5s ease-in-out infinite, glowPulse 1.5s ease-in-out infinite;
+            text-shadow: 
+                -2px -2px 0 rgba(255,0,0,0.5),
+                2px 2px 0 rgba(0,0,255,0.5);
+            position: relative;
+        }
+        
+        @keyframes liquidChar {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg);
+                letter-spacing: 0px;
+            }
+            25% { 
+                transform: translateY(-2px) rotate(1deg);
+                letter-spacing: 1px;
+            }
+            50% { 
+                transform: translateY(2px) rotate(-1deg);
+                letter-spacing: -0.5px;
+            }
+            75% { 
+                transform: translateY(-1px) rotate(0.5deg);
+                letter-spacing: 0.5px;
+            }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% { opacity: 1; filter: brightness(1); }
+            50% { opacity: 0.9; filter: brightness(1.2); }
+        }
+        
+        /* Искры */
+        .colalip-wrapper {
+            position: relative;
+        }
+        
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffd700, #ff8c00);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10;
+            animation: sparkFade 1s ease-out forwards;
+        }
+        
+        @keyframes sparkFade {
+            0% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0) translateY(-20px);
+                opacity: 0;
+            }
+        }
+        
+        /* Блик */
+        .colalip-char::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shine 3s ease-in-out infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+        
+        .header-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
         }
         
         .sub {
             border-left: 4px solid #2c7ab1;
             padding-left: 16px;
             margin-bottom: 20px;
+            text-align: center;
         }
         
         /* ===== ИНТЕРАКТИВНАЯ ПАНЕЛЬ ЦВЕТОВ ===== */
@@ -235,6 +348,7 @@
             .card { padding: 15px 20px; }
             .color-btn { padding: 5px 12px; font-size: 0.7rem; }
             .color-dot-small { width: 18px; height: 18px; }
+            .glow-text, .colalip-char { font-size: 1.3rem; }
         }
         
         /* ===== ТЕМЫ (10 цветов) ===== */
@@ -266,7 +380,13 @@
         <!-- Главная карточка с золотой рамкой -->
         <div class="card gold-card">
             <div class="header-flex">
-                <h1>🏆 Полный анализ прогресса</h1>
+                <div class="colalip-wrapper" id="colalipLeft">
+                    <!-- Буквы ColaLip будут вставлены через JS -->
+                </div>
+                <h1 class="glow-text">🔥 ПОЛНЫЙ АНАЛИЗ ПРОГРЕССА 🔥</h1>
+                <div class="colalip-wrapper" id="colalipRight">
+                    <!-- Буквы ColaLip будут вставлены через JS -->
+                </div>
             </div>
             <div class="sub">Твой путь к 0.1% • каждая цифра имеет значение</div>
             
@@ -336,6 +456,47 @@
         const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
         
         const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        
+        // ========== АНИМАЦИЯ ИСКР ДЛЯ ColaLip ==========
+        function createSpark(parent) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            const rect = parent.getBoundingClientRect();
+            const offsetX = Math.random() * rect.width;
+            const offsetY = Math.random() * rect.height;
+            spark.style.left = offsetX + 'px';
+            spark.style.top = offsetY + 'px';
+            parent.appendChild(spark);
+            setTimeout(() => spark.remove(), 1000);
+        }
+        
+        function initColaLip() {
+            const nickname = "ColaLip";
+            const leftWrapper = document.getElementById('colalipLeft');
+            const rightWrapper = document.getElementById('colalipRight');
+            
+            function buildWrapper(wrapper) {
+                wrapper.innerHTML = '';
+                for (let i = 0; i < nickname.length; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'colalip-char';
+                    span.textContent = nickname[i];
+                    span.style.animationDelay = `${i * 0.05}s`;
+                    wrapper.appendChild(span);
+                }
+                // Добавляем искры каждые 500ms
+                setInterval(() => {
+                    if (document.body.contains(wrapper)) {
+                        for (let i = 0; i < 3; i++) {
+                            setTimeout(() => createSpark(wrapper), i * 100);
+                        }
+                    }
+                }, 800);
+            }
+            
+            buildWrapper(leftWrapper);
+            buildWrapper(rightWrapper);
+        }
         
         // ========== ТЕМЫ (10 цветов) ==========
         const themes = [
@@ -412,7 +573,7 @@
             requestAnimationFrame(update);
         }
         
-        // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
+        // ========== ФОРМАТИРОВАНИЕ ДАТЫ И ВРЕМЕНИ ==========
         function formatDateRussian(dateStr) {
             let parts = dateStr.split(' ');
             let datePart = parts[0];
@@ -551,7 +712,17 @@
             }
         }
         
-        // ===== СРАВНЕНИЕ С ПРОШЛЫМ МЕСЯЦЕМ =====
+        // ===== СРАВНЕНИЕ С ПРОШЛЫМ МЕСЯЦЕМ (ИСПРАВЛЕННЫЙ ФОРМАТ ДАТЫ) =====
+        function formatDateForCompare(dateStr) {
+            let parts = dateStr.split(' ');
+            let datePart = parts[0];
+            if (datePart.includes('T')) datePart = datePart.split('T')[0];
+            let [year, month, day] = datePart.split('-');
+            if (!year || !month || !day) return dateStr;
+            let monthName = monthNames[parseInt(month) - 1];
+            return `${parseInt(day)} ${monthName} ${year}`;
+        }
+        
         function renderMonthCompare() {
             const now = new Date();
             const currentMonth = now.getMonth();
@@ -569,22 +740,30 @@
                 const byDate = new Map();
                 for (let rec of filtered) {
                     const date = rec.date;
-                    byDate.set(date, (byDate.get(date) || 0) + rec.points);
+                    const points = rec.points;
+                    byDate.set(date, (byDate.get(date) || 0) + points);
                 }
                 const dates = Array.from(byDate.keys()).sort();
                 const points = dates.map(d => byDate.get(d));
-                return { dates, points };
+                const formattedDates = dates.map(d => formatDateForCompare(d));
+                return { dates: formattedDates, points, rawDates: dates };
             }
             
             const currentData = getMonthData(currentYear, currentMonth);
             const lastData = getMonthData(lastYear, lastMonth);
             
             const layoutBase = {
-                xaxis: { title: '', gridcolor: getGridColor(), color: getAxisColor() },
+                xaxis: { 
+                    title: '', 
+                    gridcolor: getGridColor(), 
+                    color: getAxisColor(),
+                    tickangle: -30,
+                    tickfont: { size: 10 }
+                },
                 yaxis: { title: 'Баллы', gridcolor: getGridColor(), color: getAxisColor() },
                 paper_bgcolor: 'rgba(0,0,0,0)',
                 plot_bgcolor: 'rgba(0,0,0,0)',
-                margin: { l: 40, r: 20, t: 40, b: 40 }
+                margin: { l: 50, r: 20, t: 50, b: 80 }
             };
             
             const currentTrace = {
@@ -605,8 +784,14 @@
                 marker: { size: 6 }
             };
             
-            Plotly.newPlot('currentMonthChart', [currentTrace], { ...layoutBase, title: `📅 ${monthNames[currentMonth]} ${currentYear}` });
-            Plotly.newPlot('previousMonthChart', [lastTrace], { ...layoutBase, title: `📅 ${monthNames[lastMonth]} ${lastYear}` });
+            Plotly.newPlot('currentMonthChart', [currentTrace], { 
+                ...layoutBase, 
+                title: `📅 ${monthNames[currentMonth]} ${currentYear}` 
+            });
+            Plotly.newPlot('previousMonthChart', [lastTrace], { 
+                ...layoutBase, 
+                title: `📅 ${monthNames[lastMonth]} ${lastYear}` 
+            });
         }
         
         // ===== ПРОГНОЗ =====
@@ -747,6 +932,9 @@
             selectedCategory = e.target.value;
             render();
         });
+        
+        // Инициализация анимации ColaLip
+        initColaLip();
         
         render();
     </script>
