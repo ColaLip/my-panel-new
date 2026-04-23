@@ -3,35 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои графики — полная аналитика</title>
+    <title>Мои графики — расширенный фильтр</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             padding: 0;
             margin: 0;
             transition: background 0.3s ease;
             min-height: 100vh;
             width: 100%;
         }
-        /* Тема 1: светлая */
-        body.light {
-            background: linear-gradient(135deg, #f0f4fa 0%, #e2eaf5 100%);
-            color: #1a2a3a;
-        }
-        body.dark {
-            background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
-            color: #eef2f7;
-        }
-        body.mint {
-            background: linear-gradient(135deg, #d4e4d7 0%, #bdd4c3 100%);
-            color: #1e3a2f;
-        }
-        body.warm {
-            background: linear-gradient(135deg, #fde8cd 0%, #f5d5b3 100%);
-            color: #4a3728;
-        }
+        body.light { background: linear-gradient(135deg, #f0f4fa 0%, #e2eaf5 100%); color: #1a2a3a; }
+        body.dark { background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%); color: #eef2f7; }
+        body.mint { background: linear-gradient(135deg, #d4e4d7 0%, #bdd4c3 100%); color: #1e3a2f; }
+        body.warm { background: linear-gradient(135deg, #fde8cd 0%, #f5d5b3 100%); color: #4a3728; }
         .container {
             max-width: 100%;
             margin: 0;
@@ -46,16 +33,9 @@
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
             width: 100%;
         }
-        body.dark .card {
-            background: rgba(30,40,50,0.92);
-            color: #eef2f7;
-        }
-        body.mint .card {
-            background: rgba(240,255,240,0.92);
-        }
-        body.warm .card {
-            background: rgba(255,248,240,0.92);
-        }
+        body.dark .card { background: rgba(30,40,50,0.92); }
+        body.mint .card { background: rgba(240,255,240,0.92); }
+        body.warm .card { background: rgba(255,248,240,0.92); }
         .header-flex {
             display: flex;
             justify-content: space-between;
@@ -71,15 +51,8 @@
             color: transparent;
             margin: 0;
         }
-        body.dark h1 {
-            background: linear-gradient(120deg, #6ea8d4, #3c8db8);
-            -webkit-background-clip: text;
-        }
-        .sub {
-            border-left: 4px solid #2c7ab1;
-            padding-left: 16px;
-            margin-bottom: 25px;
-        }
+        body.dark h1 { background: linear-gradient(120deg, #6ea8d4, #3c8db8); -webkit-background-clip: text; }
+        .sub { border-left: 4px solid #2c7ab1; padding-left: 16px; margin-bottom: 20px; }
         .stats-grid {
             display: flex;
             flex-wrap: wrap;
@@ -94,28 +67,26 @@
             flex: 1;
             min-width: 150px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
-        body.dark .stat-card {
-            background: rgba(20,30,40,0.7);
-        }
+        body.dark .stat-card { background: rgba(20,30,40,0.7); }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: #1a5d8f; }
         body.dark .stat-number { color: #6ea8d4; }
         .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; opacity: 0.8; }
-        .controls {
+        .controls-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 20px;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 25px;
         }
-        .period-group, .theme-group {
+        .period-group, .theme-group, .category-selector {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            align-items: center;
         }
-        button {
+        button, select {
             background: #e4ebf3;
             border: none;
             padding: 8px 20px;
@@ -125,27 +96,16 @@
             transition: 0.2s;
             font-size: 0.85rem;
         }
-        button.active { background: #1f6e9e; color: white; box-shadow: 0 4px 10px rgba(31,110,158,0.3); }
+        select {
+            cursor: pointer;
+            background: #e4ebf3;
+        }
+        button.active { background: #1f6e9e; color: white; }
         .theme-btn { background: #ddd; font-size: 0.75rem; padding: 6px 16px; }
-        body.dark button { background: #2a3a48; color: #eef; }
+        body.dark button, body.dark select { background: #2a3a48; color: #eef; }
         body.dark button.active { background: #3c8db8; }
-        #mainChart {
-            width: 100%;
-            height: 600px;
-        }
+        #mainChart { width: 100%; height: 600px; }
         .legend-note { text-align: center; font-size: 0.7rem; margin-top: 15px; opacity: 0.7; }
-        .cat-filter-section {
-            margin-top: 10px;
-        }
-        .cat-filter-section div:first-child {
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        #categoryFilter {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
         footer { text-align: center; font-size: 0.7rem; margin-top: 30px; opacity: 0.6; }
         @media (max-width: 700px) {
             .container { padding: 10px 15px; }
@@ -167,7 +127,7 @@
                 <button class="theme-btn" data-theme="warm">🔥 Тёплая</button>
             </div>
         </div>
-        <div class="sub">Общага + все категории • динамика роста</div>
+        <div class="sub">Общага + фильтр по категориям и периодам</div>
         <div class="stats-grid" id="statsPanel">
             <div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">Всего баллов</div></div>
             <div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">Дней активности</div></div>
@@ -177,20 +137,20 @@
     </div>
 
     <div class="card">
-        <div class="controls">
+        <div class="controls-row">
             <div class="period-group">
                 <button class="period-btn active" data-period="all">📆 Всё время</button>
                 <button class="period-btn" data-period="week">🗓️ 7 дней</button>
                 <button class="period-btn" data-period="month">🌙 30 дней</button>
             </div>
+            <div class="category-selector">
+                <select id="categorySelect">
+                    <option value="all">📊 Все категории</option>
+                </select>
+            </div>
         </div>
         <div id="mainChart" style="height: 600px; width: 100%;"></div>
-        <div class="legend-note">💡 Кликайте по названиям категорий в легенде, чтобы скрыть/показать линию</div>
-    </div>
-
-    <div class="card cat-filter-section">
-        <div>🎨 Фильтр категорий (нажми, чтобы скрыть)</div>
-        <div id="categoryFilter"></div>
+        <div class="legend-note">💡 Нажмите на название категории в легенде, чтобы скрыть/показать линию</div>
     </div>
     <footer>Данные из Google Sheets • обновляются при перезагрузке</footer>
 </div>
@@ -201,7 +161,7 @@
 
     let allRecords = [];
     let activePeriod = 'all';
-    let hiddenCategories = new Set();
+    let selectedCategory = 'all';
     let categoryColors = {};
     const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
 
@@ -210,7 +170,7 @@
         localStorage.setItem('graph_theme', theme);
     }
     document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.addEventListener('click', () => { setTheme(btn.dataset.theme); });
+        btn.addEventListener('click', () => setTheme(btn.dataset.theme));
     });
     const savedTheme = localStorage.getItem('graph_theme');
     if (savedTheme) setTheme(savedTheme);
@@ -241,11 +201,12 @@
         return data.filter(d => new Date(d.date) >= limit);
     }
 
-    function aggregate(data) {
+    function aggregate(data, filterCat) {
         const byDateCat = new Map();
         for (let rec of data) {
             const date = rec.date;
             const cat = rec.category;
+            if (filterCat !== 'all' && cat !== filterCat) continue;
             if (!byDateCat.has(date)) byDateCat.set(date, new Map());
             byDateCat.get(date).set(cat, (byDateCat.get(date).get(cat) || 0) + rec.points);
         }
@@ -261,21 +222,24 @@
             traces.push({
                 x: dates, y: y, mode: 'lines+markers', name: cat,
                 line: { width: 2.5, color: categoryColors[cat] },
-                marker: { size: 5 },
-                visible: hiddenCategories.has(cat) ? 'legendonly' : true
+                marker: { size: 5 }
             });
         }
-        const totalByDate = dates.map(d => {
-            let sum = 0;
-            for (let cat of categories) sum += byDateCat.get(d).get(cat) || 0;
-            return sum;
-        });
-        traces.unshift({
-            x: dates, y: totalByDate, mode: 'lines+markers', name: '📈 Общага (сумма)',
-            line: { width: 4, color: '#1c4966', dash: 'solid' },
-            marker: { size: 7 },
-            visible: true
-        });
+        let totalByDate = [];
+        if (filterCat === 'all') {
+            totalByDate = dates.map(d => {
+                let sum = 0;
+                for (let cat of categories) sum += byDateCat.get(d).get(cat) || 0;
+                return sum;
+            });
+            traces.unshift({
+                x: dates, y: totalByDate, mode: 'lines+markers', name: '📈 Общага (сумма)',
+                line: { width: 4, color: '#1c4966', dash: 'solid' },
+                marker: { size: 7 }
+            });
+        } else {
+            totalByDate = dates.map(d => byDateCat.get(d).get(filterCat) || 0);
+        }
         return { traces, dates, totalByDate, categories };
     }
 
@@ -290,31 +254,33 @@
         document.getElementById('bestDay').innerText = best.toFixed(1);
     }
 
+    function updateCategorySelect(categories) {
+        const select = document.getElementById('categorySelect');
+        const current = select.value;
+        select.innerHTML = '<option value="all">📊 Все категории</option>';
+        categories.sort().forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            select.appendChild(option);
+        });
+        if (current && [...select.options].some(opt => opt.value === current)) {
+            select.value = current;
+        } else {
+            select.value = 'all';
+            selectedCategory = 'all';
+        }
+    }
+
     async function render() {
         await fetchData();
         const filtered = filterPeriod(allRecords);
-        const { traces, dates, totalByDate, categories } = aggregate(filtered);
+        const allCats = [...new Set(filtered.map(r => r.category))];
+        updateCategorySelect(allCats);
+        const { traces, dates, totalByDate, categories } = aggregate(filtered, selectedCategory);
         updateStats(dates, totalByDate);
-        
-        const container = document.getElementById('categoryFilter');
-        container.innerHTML = '';
-        categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.innerText = cat;
-            btn.style.padding = '6px 16px';
-            btn.style.borderRadius = '30px';
-            btn.style.background = hiddenCategories.has(cat) ? '#aaa' : '#e4ebf3';
-            btn.style.cursor = 'pointer';
-            btn.onclick = () => {
-                if (hiddenCategories.has(cat)) hiddenCategories.delete(cat);
-                else hiddenCategories.add(cat);
-                render();
-            };
-            container.appendChild(btn);
-        });
-        
         const layout = {
-            title: 'Прогресс по дням (Общага + категории)',
+            title: selectedCategory === 'all' ? 'Прогресс по дням (Общага + все категории)' : `Прогресс по категории: ${selectedCategory}`,
             xaxis: { title: 'Дата', tickangle: -35, gridcolor: '#ddd' },
             yaxis: { title: 'Баллы', gridcolor: '#ddd' },
             hovermode: 'closest',
@@ -333,6 +299,10 @@
             activePeriod = btn.dataset.period;
             render();
         });
+    });
+    document.getElementById('categorySelect').addEventListener('change', (e) => {
+        selectedCategory = e.target.value;
+        render();
     });
     render();
 </script>
