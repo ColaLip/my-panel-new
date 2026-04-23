@@ -151,7 +151,7 @@
     }
 
     function aggregate(data) {
-        const byDateCat = new Map(); // date → Map(category → points)
+        const byDateCat = new Map();
         for (let rec of data) {
             const date = rec.date;
             const cat = rec.category;
@@ -172,7 +172,6 @@
                 line: { width: 2.5, color: categoryColors[cat] || "#888" }
             });
         }
-        // Общага (сумма всех категорий)
         const totalByDate = dates.map(d => {
             let sum = 0;
             for (let cat of categories) sum += byDateCat.get(d).get(cat) || 0;
