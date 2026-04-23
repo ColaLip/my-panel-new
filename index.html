@@ -3,340 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои графики — ColaLip</title>
+    <title>ColaLip — Полный анализ прогресса</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
             transition: background 0.3s ease, color 0.2s ease;
             min-height: 100vh;
         }
-        
-        /* ===== ТРЁХКОЛОНОЧНЫЙ МАКЕТ ===== */
+
+        /* ========== 3-КОЛОНОЧНЫЙ МАКЕТ ========== */
         .dashboard {
             display: flex;
-            gap: 24px;
-            max-width: 1900px;
+            gap: 28px;
+            max-width: 2000px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 24px;
         }
-        
-        /* Сайдбары — шире и больше */
+
+        /* ЛЕВЫЙ + ПРАВЫЙ САЙДБАРЫ — УВЕЛИЧЕНЫ В 2 РАЗА */
         .sidebar {
-            flex: 0 0 320px;
+            flex: 0 0 380px;          /* было 320px → теперь 380px */
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 28px;
         }
-        
+
         .sidebar-card {
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(4px);
-            border-radius: 28px;
-            padding: 24px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
+            padding: 28px;
             transition: background 0.2s;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
         }
-        
+
         .sidebar-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 18px;
-            border-left: 4px solid #ffd700;
-            padding-left: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            border-left: 5px solid #ffd700;
+            padding-left: 18px;
         }
-        
+
         .today-stats {
             text-align: center;
         }
-        
+
         .today-points {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 4.2rem;
+            font-weight: 900;
             color: #ff8c00;
         }
-        
+
         .rank-progress {
-            margin-top: 20px;
+            margin-top: 28px;
         }
-        
+
         .progress-bar-bg {
-            background: rgba(0,0,0,0.1);
-            border-radius: 20px;
-            height: 14px;
+            background: rgba(0, 0, 0, 0.12);
+            border-radius: 40px;
+            height: 16px;
             overflow: hidden;
-            margin-top: 8px;
+            margin-top: 10px;
         }
-        
+
         .progress-bar-fill {
             background: linear-gradient(90deg, #ffd700, #ff8c00);
             width: 0%;
             height: 100%;
-            border-radius: 20px;
+            border-radius: 40px;
             transition: width 0.5s;
         }
-        
+
         .top-category-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.08);
-            font-size: 1rem;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 1.15rem;
+            font-weight: 500;
         }
-        
-        /* Основной контент */
+
+        /* ОСНОВНОЙ КОНТЕНТ */
         .main-content {
             flex: 1;
             min-width: 0;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 28px;
         }
-        
+
         .card {
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(2px);
-            border-radius: 28px;
-            padding: 25px 30px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(6px);
+            border-radius: 34px;
+            padding: 28px 34px;
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.08);
             transition: background 0.2s;
         }
-        
-        /* ✨ ЗОЛОТАЯ РАМКА ДЛЯ ГЛАВНОЙ КАРТОЧКИ ✨ */
+
+        /* ЗОЛОТАЯ РАМКА */
         .gold-card {
-            border: 2px solid gold;
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
-            position: relative;
+            border: 3px solid gold;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.4);
         }
-        
-        /* ===== ЗАГОЛОВОК С ОДНИМ БОЛЬШИМ ColaLip ===== */
+
+        /* ЗАГОЛОВОК С БОЛЬШИМ ColaLip + ЧЁРНАЯ ОКАНТОВКА */
         .animated-header {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
-        
+
         .big-colalip {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
-        
+
         .colalip-single {
             display: inline-flex;
-            gap: 4px;
+            gap: 6px;
             position: relative;
         }
-        
+
         .colalip-char {
             display: inline-block;
-            font-size: 2.8rem;
-            font-weight: 800;
+            font-size: 3.3rem;
+            font-weight: 900;
             background: linear-gradient(135deg, #ffd700, #ff8c00, #ff69b4, #00bfff, #ffd700);
             background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: liquidCharBig 2.5s ease-in-out infinite, glowPulse 1.5s ease-in-out infinite;
+            animation: liquidCharBig 2.6s ease-in-out infinite, glowPulse 1.6s ease-in-out infinite;
             text-shadow: 
-                -2px -2px 0 rgba(255,0,0,0.4),
-                2px 2px 0 rgba(0,0,255,0.4);
+                -3px -3px 0 rgba(255, 0, 0, 0.5),
+                3px 3px 0 rgba(0, 0, 255, 0.5);
         }
-        
+
         @keyframes liquidCharBig {
             0%, 100% { transform: translateY(0px) rotate(0deg); letter-spacing: 0px; }
-            25% { transform: translateY(-3px) rotate(1deg); letter-spacing: 1px; }
-            50% { transform: translateY(3px) rotate(-1deg); letter-spacing: -0.5px; }
-            75% { transform: translateY(-1px) rotate(0.5deg); letter-spacing: 0.5px; }
+            25% { transform: translateY(-4px) rotate(1.5deg); letter-spacing: 1.5px; }
+            50% { transform: translateY(4px) rotate(-1.5deg); letter-spacing: -1px; }
+            75% { transform: translateY(-2px) rotate(1deg); letter-spacing: 0.8px; }
         }
-        
+
         @keyframes glowPulse {
             0%, 100% { opacity: 1; filter: brightness(1); }
-            50% { opacity: 0.9; filter: brightness(1.1); }
+            50% { opacity: 0.92; filter: brightness(1.12); }
         }
-        
-        /* Искры */
+
+        /* ИСКРЫ ВОКРУГ ColaLip */
         .spark {
             position: absolute;
-            width: 5px;
-            height: 5px;
+            width: 6px;
+            height: 6px;
             background: radial-gradient(circle, #ffd700, #ff8c00);
             border-radius: 50%;
             pointer-events: none;
-            z-index: 10;
+            z-index: 12;
             animation: sparkFade 1s ease-out forwards;
         }
-        
+
         @keyframes sparkFade {
-            0% { transform: scale(1) translateY(0); opacity: 1; }
-            100% { transform: scale(0) translateY(-30px); opacity: 0; }
+            0% { transform: scale(1) translateY(0px); opacity: 1; }
+            100% { transform: scale(0) translateY(-40px); opacity: 0; }
         }
-        
-        /* ЗАГОЛОВОК С ЧЁРНОЙ ОКАНТОВКОЙ — ВИДНО ПРИ ЛЮБОМ ФОНЕ */
+
+        /* ЗАГОЛОВОК С МОЩНОЙ ЧЁРНОЙ ОКАНТОВКОЙ (видно всегда) */
         .glow-text {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.4rem;
+            font-weight: 900;
             background: linear-gradient(90deg, #ffd700, #ff8c00, #ffd700, #ffeb3b, #ffd700);
             background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             animation: gradientMove 3s ease infinite;
-            /* МОЩНАЯ ЧЁРНАЯ ОКАНТОВКА */
             text-shadow: 
-                3px 3px 0 #000,
-                -3px -3px 0 #000,
-                3px -3px 0 #000,
-                -3px 3px 0 #000,
-                0px 0px 8px rgba(0,0,0,0.7);
+                4px 4px 0 #000,
+                -4px -4px 0 #000,
+                4px -4px 0 #000,
+                -4px 4px 0 #000,
+                0px 0px 12px rgba(0, 0, 0, 0.8);
         }
-        
+
         @keyframes gradientMove {
             0% { background-position: 0% center; }
             50% { background-position: 100% center; }
             100% { background-position: 0% center; }
         }
-        
+
         .sub {
             text-align: center;
+            font-size: 1rem;
             border-left: none;
-            margin-bottom: 20px;
-            opacity: 0.8;
-            font-size: 0.9rem;
+            margin-bottom: 22px;
+            opacity: 0.85;
         }
-        
-        /* ===== ПАНЕЛЬ ЦВЕТОВ ===== */
+
+        /* ПАНЕЛЬ ЦВЕТОВ (10 тем) */
         .color-bar {
-            background: rgba(0,0,0,0.05);
-            border-radius: 60px;
-            padding: 8px 20px;
-            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 80px;
+            padding: 12px 24px;
+            margin-bottom: 24px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
+            gap: 16px;
         }
-        
+
         .color-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 6px 16px;
-            border-radius: 40px;
+            gap: 10px;
+            padding: 8px 22px;
+            border-radius: 60px;
             cursor: pointer;
             transition: 0.2s;
-            background: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            font-weight: 600;
         }
-        
+
         .color-btn.active {
             border: 2px solid gold;
-            background: rgba(255,215,0,0.2);
+            background: rgba(255, 215, 0, 0.25);
+            transform: scale(1.02);
         }
-        
+
         .color-dot-small {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
         }
-        
+
         .stats-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 25px;
+            gap: 24px;
+            margin-bottom: 20px;
         }
-        
+
         .stat-card {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 24px;
-            padding: 18px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(6px);
+            border-radius: 28px;
+            padding: 20px;
             flex: 1;
             text-align: center;
+            transition: transform 0.2s;
         }
-        
+
+        .stat-card:hover { transform: translateY(-4px); }
+
         .stat-number {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.6rem;
+            font-weight: 900;
             color: #1a5d8f;
         }
-        
+
         .controls-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 18px;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
-        
+
         button, select {
             background: #e4ebf3;
             border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            transition: 0.2s;
         }
-        
+
         button.active { background: #1f6e9e; color: white; }
-        
-        #mainChart { height: 480px; width: 100%; }
-        .double-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        #currentMonthChart, #previousMonthChart { height: 350px; }
-        
-        /* Увеличенные графики в сайдбарах */
-        #gymChart { height: 320px; width: 100%; }
-        #categoryPieChart { height: 280px; width: 100%; }
-        
+
+        #mainChart { height: 550px; width: 100%; }
+        .double-chart { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        #currentMonthChart, #previousMonthChart { height: 400px; }
+
+        /* ГРАФИКИ В САЙДБАРАХ — УВЕЛИЧЕНЫ */
+        #gymChart { height: 420px; width: 100%; }
+        #categoryPieChart { height: 380px; width: 100%; }
+
         .achievements-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 16px;
             justify-content: center;
-            margin-top: 15px;
+            margin-top: 18px;
         }
-        
+
         .achievement {
-            background: rgba(255,255,255,0.6);
-            border-radius: 20px;
-            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
+            padding: 12px 18px;
             text-align: center;
-            min-width: 90px;
+            min-width: 110px;
+            font-weight: 600;
         }
-        
+
         .achievement.unlocked {
-            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,180,0,0.1));
-            border: 1px solid gold;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 180, 0, 0.15));
+            border: 1.5px solid gold;
         }
-        
-        .achievement.locked { opacity: 0.5; }
-        
+
+        .achievement.locked { opacity: 0.55; filter: grayscale(0.1); }
+
         .forecast-number {
-            font-size: 2rem;
-            font-weight: 800;
+            font-size: 2.5rem;
+            font-weight: 900;
             color: #4caf50;
         }
-        
-        @media (max-width: 1200px) {
-            .sidebar { flex: 0 0 280px; }
-            .glow-text { font-size: 1.6rem; }
-            .colalip-char { font-size: 2rem; }
+
+        @media (max-width: 1300px) {
+            .sidebar { flex: 0 0 320px; }
+            .glow-text { font-size: 1.8rem; }
+            .colalip-char { font-size: 2.5rem; }
         }
-        
-        @media (max-width: 1000px) {
+
+        @media (max-width: 1050px) {
             .dashboard { flex-direction: column; }
             .sidebar { flex-direction: row; flex-wrap: wrap; }
-            .sidebar > div { flex: 1; min-width: 250px; }
+            .sidebar > div { flex: 1; min-width: 280px; }
         }
-        
-        @media (max-width: 700px) {
-            .double-chart { grid-template-columns: 1fr; }
-            .stats-grid { flex-direction: column; }
-        }
-        
-        /* Темы */
-        body.light { background: linear-gradient(135deg, #f0f4fa, #e2eaf5); color: #1a2a3a; }
+
+        /* ========== 10 ЦВЕТОВЫХ ТЕМ ========== */
+        body.light { background: linear-gradient(135deg, #f0f4fa, #e2eaf5); color: #0f2842; }
         body.dark { background: linear-gradient(135deg, #1a2a3a, #0f1a24); color: #eef2f7; }
         body.mint { background: linear-gradient(135deg, #d4e4d7, #bdd4c3); color: #1e3a2f; }
         body.warm { background: linear-gradient(135deg, #fde8cd, #f5d5b3); color: #4a3728; }
@@ -345,245 +350,440 @@
         body.sunset { background: linear-gradient(135deg, #f7cdc4, #f0a896); color: #5c2e1a; }
         body.forest { background: linear-gradient(135deg, #c8e2c5, #a8c9a3); color: #1a3a1a; }
         body.cherry { background: linear-gradient(135deg, #f5d0d0, #e8b0b0); color: #5e2a2a; }
-        body.cosmic { background: linear-gradient(135deg, #1a0f2e, #2d1b4e); color: #d4c4e8; }
-        
-        body.dark .card, body.dark .sidebar-card, body.cosmic .card, body.cosmic .sidebar-card { background: rgba(30,40,50,0.92); color: #eef2f7; }
-        body.dark .stat-card, body.cosmic .stat-card { background: rgba(20,30,40,0.7); }
+        body.cosmic { background: linear-gradient(135deg, #1a0f2e, #2d1b4e); color: #ddd9ff; }
+
+        body.dark .card, body.dark .sidebar-card,
+        body.cosmic .card, body.cosmic .sidebar-card { background: rgba(30, 40, 52, 0.92); color: #eef2f7; }
+        body.dark .stat-card, body.cosmic .stat-card { background: rgba(20, 30, 42, 0.8); }
+        body.mint .card, body.forest .card { background: rgba(240, 255, 240, 0.94); }
+        body.warm .card, body.sunset .card { background: rgba(255, 248, 240, 0.94); }
     </style>
 </head>
 <body class="light">
-    <div class="dashboard">
-        <!-- ЛЕВЫЙ САЙДБАР (увеличенный) -->
-        <div class="sidebar">
-            <div class="sidebar-card">
-                <div class="sidebar-title">📅 Сегодня</div>
-                <div class="today-stats">
-                    <div class="today-points" id="todayPoints">0</div>
-                    <div style="font-size:0.9rem;">баллов набрано</div>
-                </div>
-                <div class="rank-progress">
-                    <div style="font-weight:600;">🎖️ До следующего звания</div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill" style="width:0%"></div></div>
-                    <div style="font-size:0.85rem; margin-top:8px;" id="rankNeedText">—</div>
-                </div>
+<div class="dashboard">
+    <!-- ЛЕВЫЙ САЙДБАР (увеличен) -->
+    <div class="sidebar">
+        <div class="sidebar-card">
+            <div class="sidebar-title">📅 Сегодня</div>
+            <div class="today-stats">
+                <div class="today-points" id="todayPoints">0</div>
+                <div style="font-size:1rem;">баллов набрано</div>
             </div>
-            <div class="sidebar-card">
-                <div class="sidebar-title">🏆 Топ-категории (неделя)</div>
-                <div id="topCategoriesList" style="font-size:1rem;">—</div>
+            <div class="rank-progress">
+                <div style="font-weight:800; font-size:1.1rem;">🎖️ До следующего звания</div>
+                <div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill"></div></div>
+                <div style="margin-top: 10px; font-size:0.95rem;" id="rankNeedText">—</div>
             </div>
         </div>
-
-        <!-- ОСНОВНОЙ КОНТЕНТ -->
-        <div class="main-content">
-            <div class="card gold-card">
-                <div class="animated-header">
-                    <div class="big-colalip">
-                        <div class="colalip-single" id="colalipSingle"></div>
-                    </div>
-                    <h1 class="glow-text">🔥 ПОЛНЫЙ АНАЛИЗ ПРОГРЕССА 🔥</h1>
-                </div>
-                <div class="sub">Твой путь к 0.1% • каждая цифра имеет значение</div>
-                <div class="color-bar" id="colorBar"></div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">Всего баллов</div></div>
-                    <div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">Дней активности</div></div>
-                    <div class="stat-card"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">Средний балл/день</div></div>
-                    <div class="stat-card"><div class="stat-number" id="bestDay">0</div><div class="stat-label">Лучший день</div></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="controls-row">
-                    <div class="period-group"><button class="period-btn active" data-period="all">📆 Всё время</button><button class="period-btn" data-period="week">🗓️ 7 дней</button><button class="period-btn" data-period="month">🌙 30 дней</button></div>
-                    <select id="categorySelect"><option value="all">📊 Все категории</option></select>
-                </div>
-                <div id="mainChart"></div>
-            </div>
-
-            <div class="card">
-                <h3>📊 Сравнение с прошлым месяцем</h3>
-                <div class="double-chart"><div id="currentMonthChart"></div><div id="previousMonthChart"></div></div>
-            </div>
-
-            <div class="card">
-                <h3>🔮 Прогноз на следующий месяц</h3>
-                <div style="text-align:center; padding:15px;"><div class="forecast-number" id="forecastValue">—</div><div id="forecastText">Загрузка...</div></div>
-            </div>
-
-            <div class="card">
-                <h3>🏅 Достижения</h3>
-                <div class="achievements-grid" id="achievementsGrid"></div>
-            </div>
-        </div>
-
-        <!-- ПРАВЫЙ САЙДБАР (увеличенные графики) -->
-        <div class="sidebar">
-            <div class="sidebar-card">
-                <div class="sidebar-title">🏋️ Зал (суммарный вес)</div>
-                <div id="gymChart" style="height:320px;"></div>
-            </div>
-            <div class="sidebar-card">
-                <div class="sidebar-title">📈 Прогресс по категориям</div>
-                <div id="categoryPieChart" style="height:280px;"></div>
-            </div>
+        <div class="sidebar-card">
+            <div class="sidebar-title">🏆 Топ-категории (неделя)</div>
+            <div id="topCategoriesList" style="font-size:1.1rem;">—</div>
         </div>
     </div>
 
-    <script>
-        const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
-        let allRecords = [];
-        let activePeriod = 'all';
-        let selectedCategory = 'all';
-        let categoryColors = {};
-        const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-        const colorPalette = ["#4CAF50","#FF9800","#9C27B0","#E91E63","#00BCD4","#8BC34A","#F44336","#3F51B5","#FF5722","#009688"];
+    <!-- ОСНОВНОЙ БЛОК (центр) -->
+    <div class="main-content">
+        <div class="card gold-card">
+            <div class="animated-header">
+                <div class="big-colalip"><div class="colalip-single" id="colalipSingle"></div></div>
+                <h1 class="glow-text">🔥 ПОЛНЫЙ АНАЛИЗ ПРОГРЕССА 🔥</h1>
+            </div>
+            <div class="sub">Твой путь к 0.1% • каждая цифра имеет значение</div>
+            <div class="color-bar" id="colorBar"></div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">ВСЕГО БАЛЛОВ</div></div>
+                <div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">ДНЕЙ АКТИВНОСТИ</div></div>
+                <div class="stat-card"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">СРЕДНИЙ БАЛЛ/ДЕНЬ</div></div>
+                <div class="stat-card"><div class="stat-number" id="bestDay">0</div><div class="stat-label">ЛУЧШИЙ ДЕНЬ</div></div>
+            </div>
+        </div>
 
-        // Искры для одного большого ColaLip
-        function createSpark(parent) {
-            const spark = document.createElement('div');
-            spark.className = 'spark';
-            const rect = parent.getBoundingClientRect();
-            spark.style.left = Math.random() * rect.width + 'px';
-            spark.style.top = Math.random() * rect.height + 'px';
-            parent.appendChild(spark);
-            setTimeout(() => spark.remove(), 1000);
-        }
-        
-        function initColaLip() {
-            const nick = "ColaLip";
-            const container = document.getElementById('colalipSingle');
-            container.innerHTML = '';
-            [...nick].forEach((ch, i) => {
-                let span = document.createElement('span');
-                span.className = 'colalip-char';
-                span.textContent = ch;
-                span.style.animationDelay = i * 0.05 + 's';
-                container.appendChild(span);
-            });
-            setInterval(() => {
-                if (document.body.contains(container)) {
-                    for (let i = 0; i < 4; i++) setTimeout(() => createSpark(container), i * 120);
-                }
-            }, 900);
-        }
+        <div class="card">
+            <div class="controls-row">
+                <div class="period-group">
+                    <button class="period-btn active" data-period="all">📆 Всё время</button>
+                    <button class="period-btn" data-period="week">🗓️ 7 дней</button>
+                    <button class="period-btn" data-period="month">🌙 30 дней</button>
+                </div>
+                <select id="categorySelect"><option value="all">📊 Все категории</option></select>
+            </div>
+            <div id="mainChart"></div>
+        </div>
 
-        // Тема
-        const themes = [{id:'light',emoji:'☀️',color:'#f0f4fa'},{id:'dark',emoji:'🌙',color:'#1a2a3a'},{id:'mint',emoji:'🌿',color:'#bdd4c3'},{id:'warm',emoji:'🔥',color:'#f5d5b3'},{id:'lavender',emoji:'🪻',color:'#d4c4e8'},{id:'ocean',emoji:'🌊',color:'#a8d0e6'},{id:'sunset',emoji:'🌅',color:'#f0a896'},{id:'forest',emoji:'🌲',color:'#a8c9a3'},{id:'cherry',emoji:'🍒',color:'#e8b0b0'},{id:'cosmic',emoji:'🚀',color:'#2d1b4e'}];
-        function setTheme(id){ document.body.className=id; localStorage.setItem('graph_theme',id); renderAll(); updateColorBarActive(id); }
-        function updateColorBarActive(id){ document.querySelectorAll('.color-btn').forEach(b=>b.classList.toggle('active',b.dataset.theme===id)); }
-        function renderColorBar(){ const bar=document.getElementById('colorBar'); const saved=localStorage.getItem('graph_theme')||'light'; bar.innerHTML=themes.map(t=>`<div class="color-btn ${saved===t.id?'active':''}" data-theme="${t.id}"><div class="color-dot-small" style="background:${t.color};"></div><span>${t.emoji} ${t.name}</span></div>`).join(''); document.querySelectorAll('.color-btn').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.theme))); }
-        const savedTheme=localStorage.getItem('graph_theme'); if(savedTheme) setTheme(savedTheme); else setTheme('light'); renderColorBar();
+        <div class="card">
+            <h3 style="font-size:1.6rem;">📊 Сравнение с прошлым месяцем</h3>
+            <div class="double-chart"><div id="currentMonthChart"></div><div id="previousMonthChart"></div></div>
+        </div>
 
-        function formatDateRussian(d){ let p=d.split(' ')[0]; if(p.includes('T')) p=p.split('T')[0]; let [y,m,day]=p.split('-'); return `${parseInt(day)} ${monthNames[parseInt(m)-1]} ${y}`; }
-        function extractTime(d){ let p=d.split(' '); if(p.length>1) return p[1].split('.')[0]; if(d.includes('T')) return d.split('T')[1].split('.')[0]; return ''; }
-        function getAxisColor(){ return (document.body.classList.contains('dark')||document.body.classList.contains('cosmic'))?'#eef2f7':'#1a2a3a'; }
-        function getGridColor(){ return (document.body.classList.contains('dark')||document.body.classList.contains('cosmic'))?'#334455':'#ccccdd'; }
+        <div class="card">
+            <h3 style="font-size:1.6rem;">🔮 Прогноз на следующий месяц</h3>
+            <div style="text-align:center; padding:15px;"><div class="forecast-number" id="forecastValue">—</div><div id="forecastText">Загрузка данных...</div></div>
+        </div>
 
-        async function fetchData(){ const res=await fetch(CSV_URL); const text=await res.text(); const rows=text.split("\n").slice(1); allRecords=[]; for(let row of rows){ let cols=row.split(","); if(cols.length>=4&&cols[0]&&cols[3]){ let rawDate=cols[0].trim(); let dateOnly=rawDate.split(' ')[0]; if(dateOnly.includes('T')) dateOnly=dateOnly.split('T')[0]; let timeOnly=extractTime(rawDate); let points=parseFloat(cols[3].trim().replace(',','.')); if(isNaN(points)) continue; let cat=cols[1]||"Другое"; if(cat==="Финансы") points*=0.0002; if(cat==="Английский"||cat==="Чтение") cat="Развитие"; allRecords.push({date:dateOnly,time:timeOnly,category:cat,points:points}); } } }
+        <div class="card">
+            <h3 style="font-size:1.6rem;">🏅 Достижения</h3>
+            <div class="achievements-grid" id="achievementsGrid"></div>
+        </div>
+    </div>
 
-        function filterPeriod(data,period=activePeriod){ if(period==='all') return data; const now=new Date(); const limit=new Date(); limit.setDate(now.getDate()-(period==='week'?7:30)); return data.filter(d=>new Date(d.date)>=limit); }
-        function aggregate(data,filterCat){ const byDate=new Map(); for(let rec of data){ if(filterCat!=='all'&&rec.category!==filterCat) continue; byDate.set(rec.date,(byDate.get(rec.date)||0)+rec.points); } let dates=Array.from(byDate.keys()).sort(); let points=dates.map(d=>byDate.get(d)); let traces=[]; if(filterCat==='all'){ traces.push({x:dates,y:points,mode:'lines+markers',name:'📈 Общага (сумма)',line:{width:4,color:'#1c4966'},marker:{size:6}}); } else { traces.push({x:dates,y:points,mode:'lines+markers',name:filterCat,line:{width:3,color:'#ff9800'},marker:{size:6}}); } return {traces,dates,totalByDate:points}; }
+    <!-- ПРАВЫЙ САЙДБАР (увеличен в 2 раза) -->
+    <div class="sidebar">
+        <div class="sidebar-card">
+            <div class="sidebar-title">🏋️ Зал (суммарный вес)</div>
+            <div id="gymChart" style="height:420px;"></div>
+        </div>
+        <div class="sidebar-card">
+            <div class="sidebar-title">📈 Прогресс по категориям</div>
+            <div id="categoryPieChart" style="height:380px;"></div>
+        </div>
+    </div>
+</div>
 
-        function animateNumber(el,target,dec=1){ const dur=800,start=0,startTime=performance.now(); function upd(t){ let prog=Math.min(1,(t-startTime)/dur); let cur=start+(target-start)*prog; el.innerText=cur.toFixed(dec); if(prog<1) requestAnimationFrame(upd); else el.innerText=target.toFixed(dec); } requestAnimationFrame(upd); }
-        function updateStats(dates,totalByDate){ let total=totalByDate.reduce((a,b)=>a+b,0), days=dates.length, avg=days?total/days:0, best=days?Math.max(...totalByDate):0; animateNumber(document.getElementById('totalPoints'),total,1); animateNumber(document.getElementById('totalDays'),days,0); animateNumber(document.getElementById('avgPoints'),avg,1); animateNumber(document.getElementById('bestDay'),best,1); return {total,days,avg,best}; }
+<script>
+    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+    const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
+    let allRecords = [];
+    let activePeriod = 'all';
+    let selectedCategory = 'all';
+    const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
-        // Сайдбары (увеличенные)
-        function updateSidebars(){ 
-            let today=new Date().toISOString().split('T')[0]; 
-            let todayPoints=allRecords.filter(r=>r.date===today).reduce((s,r)=>s+r.points,0); 
-            document.getElementById('todayPoints').innerText=todayPoints.toFixed(1); 
-            let totalPoints=allRecords.reduce((s,r)=>s+r.points,0); 
-            let nextRank=500; 
-            let progress=Math.min(100,(totalPoints/nextRank)*100); 
-            document.getElementById('rankProgressFill').style.width=progress+'%'; 
-            document.getElementById('rankNeedText').innerText=`${Math.max(0,nextRank-totalPoints).toFixed(0)} до Старшего сержанта`; 
-            
-            let lastWeek=filterPeriod(allRecords,'week'); 
-            let catSum={}; 
-            for(let r of lastWeek) catSum[r.category]=(catSum[r.category]||0)+r.points; 
-            let top=Object.entries(catSum).sort((a,b)=>b[1]-a[1]).slice(0,3); 
-            document.getElementById('topCategoriesList').innerHTML=top.map(([c,p])=>`<div class="top-category-item"><span>${c}</span><span style="font-weight:700;">${p.toFixed(1)}</span></div>`).join('')||'—'; 
-            
-            let gymData=allRecords.filter(r=>r.category==='Спорт'&&r.date>=new Date(Date.now()-30*86400000).toISOString().split('T')[0]); 
-            let gymByDate=new Map(); 
-            for(let r of gymData) gymByDate.set(r.date,(gymByDate.get(r.date)||0)+r.points); 
-            let gymDates=[...gymByDate.keys()].sort().slice(-10); 
-            let gymPoints=gymDates.map(d=>gymByDate.get(d)); 
-            Plotly.newPlot('gymChart',[{x:gymDates,y:gymPoints,mode:'lines+markers',name:'Спорт (баллы)',line:{color:'#ff8c00',width:3}}],{margin:{l:40,r:20,t:30,b:40},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',xaxis:{tickangle:0,color:getAxisColor()},yaxis:{color:getAxisColor()}}); 
-            
-            let catTotal=allRecords.reduce((acc,r)=>{acc[r.category]=(acc[r.category]||0)+r.points; return acc;},{}); 
-            let pieLabels=Object.keys(catTotal).slice(0,6); 
-            let pieValues=pieLabels.map(l=>catTotal[l]); 
-            Plotly.newPlot('categoryPieChart',[{labels:pieLabels,values:pieValues,type:'pie',marker:{colors:colorPalette},textinfo:'percent',hole:0.3}],{margin:{l:10,r:10,t:30,b:10},paper_bgcolor:'rgba(0,0,0,0)',showlegend:true,legend:{font:{size:10}}}); 
-        }
+    // ========== 10 ТЕМ (цветовая панель) ==========
+    const themes = [
+        { id: 'light', name: 'Светлая', emoji: '☀️', color: '#f0f4fa' },
+        { id: 'dark', name: 'Тёмная', emoji: '🌙', color: '#1a2a3a' },
+        { id: 'mint', name: 'Мятная', emoji: '🌿', color: '#bdd4c3' },
+        { id: 'warm', name: 'Тёплая', emoji: '🔥', color: '#f5d5b3' },
+        { id: 'lavender', name: 'Лавандовая', emoji: '🪻', color: '#d4c4e8' },
+        { id: 'ocean', name: 'Океан', emoji: '🌊', color: '#a8d0e6' },
+        { id: 'sunset', name: 'Закат', emoji: '🌅', color: '#f0a896' },
+        { id: 'forest', name: 'Лесная', emoji: '🌲', color: '#a8c9a3' },
+        { id: 'cherry', name: 'Вишнёвая', emoji: '🍒', color: '#e8b0b0' },
+        { id: 'cosmic', name: 'Космическая', emoji: '🚀', color: '#2d1b4e' }
+    ];
 
-        function renderMonthCompare(){ 
-            let now=new Date(), cm=now.getMonth(), cy=now.getFullYear(), lm=cm-1<0?11:cm-1, ly=cm-1<0?cy-1:cy; 
-            function getData(y,m){ 
-                let f=allRecords.filter(r=>{let d=new Date(r.date); return d.getFullYear()===y&&d.getMonth()===m;}); 
-                let by=new Map(); 
-                for(let r of f) by.set(r.date,(by.get(r.date)||0)+r.points); 
-                let dates=Array.from(by.keys()).sort(); 
-                let points=dates.map(d=>by.get(d)); 
-                return {dates:dates.map(d=>formatDateRussian(d)),points}; 
-            } 
-            let cur=getData(cy,cm), prev=getData(ly,lm); 
-            let layout={xaxis:{tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:50,r:20,t:40,b:60}}; 
-            Plotly.newPlot('currentMonthChart',[{x:cur.dates,y:cur.points,mode:'lines+markers',name:'Текущий месяц',line:{color:'#4caf50',width:3}}],{...layout,title:`📅 ${monthNames[cm]} ${cy}`}); 
-            Plotly.newPlot('previousMonthChart',[{x:prev.dates,y:prev.points,mode:'lines+markers',name:'Прошлый месяц',line:{color:'#ff9800',width:3}}],{...layout,title:`📅 ${monthNames[lm]} ${ly}`}); 
-        }
-
-        function renderForecast(){ 
-            let last30=filterPeriod(allRecords,'month'); 
-            let byDate=new Map(); 
-            for(let r of last30) byDate.set(r.date,(byDate.get(r.date)||0)+r.points); 
-            let daily=[...byDate.values()]; 
-            if(daily.length===0){ document.getElementById('forecastValue').innerText='—'; document.getElementById('forecastText').innerText='Нет данных'; return; } 
-            let avg=daily.reduce((a,b)=>a+b,0)/daily.length; 
-            let forecast=(avg*30).toFixed(0); 
-            let total=allRecords.reduce((s,r)=>s+r.points,0); 
-            document.getElementById('forecastValue').innerHTML=`+${forecast} баллов`; 
-            document.getElementById('forecastText').innerHTML=`При темпе ${avg.toFixed(1)} баллов/день через месяц будет ≈ <strong>${(total+parseFloat(forecast)).toFixed(0)}</strong> баллов.`; 
-        }
-
-        function renderAchievements(){ 
-            let totalPoints=allRecords.reduce((s,r)=>s+r.points,0); 
-            let totalDays=new Set(allRecords.map(r=>r.date)).size; 
-            let sportDays=new Set(allRecords.filter(r=>r.category==='Спорт').map(r=>r.date)).size; 
-            let maxSport=Math.max(...allRecords.filter(r=>r.category==='Спорт').map(r=>r.points),0); 
-            let studyTotal=allRecords.filter(r=>r.category==='Учёба').reduce((s,r)=>s+r.points,0); 
-            let ach=[{name:'💯 Первая сотня',desc:'100 баллов',check:totalPoints>=100,emoji:'🎯'},{name:'🌟 500 баллов',check:totalPoints>=500,emoji:'⭐'},{name:'🏆 1000 баллов',check:totalPoints>=1000,emoji:'🏆'},{name:'📅 7 дней',check:totalDays>=7,emoji:'📆'},{name:'🎖️ 30 дней',check:totalDays>=30,emoji:'🎖️'},{name:'🏋️ Спортсмен',check:sportDays>=10,emoji:'🏋️'},{name:'💪 Рекордсмен',check:maxSport>=5,emoji:'💪'},{name:'📚 Учёный',check:studyTotal>=20,emoji:'📚'}]; 
-            let grid=document.getElementById('achievementsGrid'); 
-            let unlocked=ach.filter(a=>a.check).length; 
-            grid.innerHTML=ach.map(a=>`<div class="achievement ${a.check?'unlocked':'locked'}"><div class="achievement-emoji">${a.emoji}</div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc||''}</div></div>`).join(''); 
-            let cnt=document.querySelector('.achievements-counter'); 
-            if(!cnt){ let c=document.createElement('div'); c.className='achievements-counter'; c.style.marginTop='12px'; c.style.textAlign='center'; c.style.fontSize='0.8rem'; c.innerHTML=`🏅 Получено: ${unlocked}/${ach.length}`; grid.parentNode.appendChild(c); } else cnt.innerHTML=`🏅 Получено: ${unlocked}/${ach.length}`; 
-        }
-
-        async function renderAll(){ 
-            await fetchData(); 
-            let filtered=filterPeriod(allRecords); 
-            let cats=[...new Set(filtered.map(r=>r.category))]; 
-            let sel=document.getElementById('categorySelect'); 
-            sel.innerHTML='<option value="all">📊 Все категории</option>'+cats.sort().map(c=>`<option value="${c}">${c}</option>`).join(''); 
-            if(selectedCategory!=='all'&&cats.includes(selectedCategory)) sel.value=selectedCategory; 
-            else{ sel.value='all'; selectedCategory='all'; } 
-            let {traces,dates,totalByDate}=aggregate(filtered,selectedCategory); 
-            updateStats(dates,totalByDate); 
-            let tickLabels=dates.map(d=>{ let rec=allRecords.find(r=>r.date===d); let time=rec?.time||''; let date=formatDateRussian(d); return time?`<b>${time}</b><br>${date}`:date; }); 
-            Plotly.newPlot('mainChart',traces,{xaxis:{ticktext:tickLabels,tickvals:dates,type:'category',tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},legend:{orientation:'h',y:-0.15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:50,r:30,t:50,b:80}},{responsive:true}); 
-            renderMonthCompare(); 
-            renderForecast(); 
-            renderAchievements(); 
-            updateSidebars(); 
-        }
-
-        document.querySelectorAll('.period-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); activePeriod=btn.dataset.period; renderAll(); }));
-        document.getElementById('categorySelect').addEventListener('change',e=>{ selectedCategory=e.target.value; renderAll(); });
-        
-        initColaLip();
+    function setTheme(themeId) {
+        document.body.className = themeId;
+        localStorage.setItem('graph_theme', themeId);
         renderAll();
-    </script>
+        updateColorBarActive(themeId);
+    }
+
+    function updateColorBarActive(themeId) {
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            if (btn.dataset.theme === themeId) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+    }
+
+    function renderColorBar() {
+        const bar = document.getElementById('colorBar');
+        const saved = localStorage.getItem('graph_theme') || 'light';
+        bar.innerHTML = themes.map(t => `
+            <div class="color-btn ${saved === t.id ? 'active' : ''}" data-theme="${t.id}">
+                <div class="color-dot-small" style="background: ${t.color};"></div>
+                <span>${t.emoji} ${t.name}</span>
+            </div>
+        `).join('');
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            btn.addEventListener('click', () => setTheme(btn.dataset.theme));
+        });
+    }
+
+    const savedTheme = localStorage.getItem('graph_theme');
+    if (savedTheme) setTheme(savedTheme);
+    else setTheme('light');
+    renderColorBar();
+
+    // ========== ИСКРЫ ColaLip ==========
+    function createSpark(parent) {
+        const spark = document.createElement('div');
+        spark.className = 'spark';
+        const rect = parent.getBoundingClientRect();
+        spark.style.left = Math.random() * rect.width + 'px';
+        spark.style.top = Math.random() * rect.height + 'px';
+        parent.appendChild(spark);
+        setTimeout(() => spark.remove(), 1000);
+    }
+
+    function initColaLip() {
+        const nick = "ColaLip";
+        const container = document.getElementById('colalipSingle');
+        container.innerHTML = '';
+        [...nick].forEach((ch, idx) => {
+            let span = document.createElement('span');
+            span.className = 'colalip-char';
+            span.textContent = ch;
+            span.style.animationDelay = idx * 0.05 + 's';
+            container.appendChild(span);
+        });
+        setInterval(() => {
+            if (document.body.contains(container)) {
+                for (let i = 0; i < 5; i++) setTimeout(() => createSpark(container), i * 100);
+            }
+        }, 850);
+    }
+
+    // ========== ФОРМАТЫ ДАТ / ВРЕМЕНИ ==========
+    function formatDateRussian(dateStr) {
+        let p = dateStr.split(' ')[0];
+        if (p.includes('T')) p = p.split('T')[0];
+        let [y, m, d] = p.split('-');
+        if (!y || !m || !d) return dateStr;
+        return `${parseInt(d)} ${monthNames[parseInt(m) - 1]} ${y}`;
+    }
+
+    function extractTime(dateStr) {
+        let parts = dateStr.split(' ');
+        if (parts.length > 1) return parts[1].split('.')[0];
+        if (dateStr.includes('T')) return dateStr.split('T')[1].split('.')[0];
+        return '';
+    }
+
+    function getAxisColor() {
+        return (document.body.classList.contains('dark') || document.body.classList.contains('cosmic')) ? '#eef2f7' : '#1a2a3a';
+    }
+    function getGridColor() {
+        return (document.body.classList.contains('dark') || document.body.classList.contains('cosmic')) ? '#334455' : '#ccccdd';
+    }
+
+    // ========== ЗАГРУЗКА ДАННЫХ ==========
+    async function fetchData() {
+        const res = await fetch(CSV_URL);
+        const text = await res.text();
+        const rows = text.split("\n").slice(1);
+        allRecords = [];
+        for (let row of rows) {
+            let cols = row.split(",");
+            if (cols.length >= 4 && cols[0] && cols[3]) {
+                let rawDate = cols[0].trim();
+                let dateOnly = rawDate.split(' ')[0];
+                if (dateOnly.includes('T')) dateOnly = dateOnly.split('T')[0];
+                let points = parseFloat(cols[3].trim().replace(',', '.'));
+                if (isNaN(points)) continue;
+                let cat = cols[1] || "Другое";
+                if (cat === "Финансы") points = points * 0.0002;
+                if (cat === "Английский" || cat === "Чтение") cat = "Развитие";
+                allRecords.push({ date: dateOnly, time: extractTime(rawDate), category: cat, points: points });
+            }
+        }
+    }
+
+    function filterPeriod(data, period = activePeriod) {
+        if (period === 'all') return data;
+        const now = new Date();
+        const limit = new Date();
+        limit.setDate(now.getDate() - (period === 'week' ? 7 : 30));
+        return data.filter(d => new Date(d.date) >= limit);
+    }
+
+    // ========== АНИМАЦИЯ БАЛЛОВ ==========
+    function animateNumber(el, target, decimals = 1) {
+        const duration = 800;
+        const startTime = performance.now();
+        function update(now) {
+            let progress = Math.min(1, (now - startTime) / duration);
+            let current = progress * target;
+            el.innerText = current.toFixed(decimals);
+            if (progress < 1) requestAnimationFrame(update);
+            else el.innerText = target.toFixed(decimals);
+        }
+        requestAnimationFrame(update);
+    }
+
+    function updateStats(dates, totalByDate) {
+        let total = totalByDate.reduce((a, b) => a + b, 0);
+        let days = dates.length;
+        let avg = days ? total / days : 0;
+        let best = days ? Math.max(...totalByDate) : 0;
+        animateNumber(document.getElementById('totalPoints'), total, 1);
+        animateNumber(document.getElementById('totalDays'), days, 0);
+        animateNumber(document.getElementById('avgPoints'), avg, 1);
+        animateNumber(document.getElementById('bestDay'), best, 1);
+    }
+
+    function aggregate(data, filterCat) {
+        const byDate = new Map();
+        for (let rec of data) {
+            if (filterCat !== 'all' && rec.category !== filterCat) continue;
+            byDate.set(rec.date, (byDate.get(rec.date) || 0) + rec.points);
+        }
+        let dates = Array.from(byDate.keys()).sort();
+        let points = dates.map(d => byDate.get(d));
+        let traces = [{
+            x: dates,
+            y: points,
+            mode: 'lines+markers',
+            name: filterCat === 'all' ? '📈 Общага (сумма)' : filterCat,
+            line: { width: 4, color: filterCat === 'all' ? '#1c4966' : '#ff9800' },
+            marker: { size: 7 }
+        }];
+        return { traces, dates, totalByDate: points };
+    }
+
+    // ========== СРАВНЕНИЕ МЕСЯЦЕВ (ровные даты, русский формат) ==========
+    function renderMonthCompare() {
+        let now = new Date();
+        let curMonth = now.getMonth(), curYear = now.getFullYear();
+        let prevMonth = curMonth === 0 ? 11 : curMonth - 1;
+        let prevYear = curMonth === 0 ? curYear - 1 : curYear;
+
+        function getMonthData(year, month) {
+            let filtered = allRecords.filter(r => {
+                let d = new Date(r.date);
+                return d.getFullYear() === year && d.getMonth() === month;
+            });
+            let map = new Map();
+            for (let r of filtered) map.set(r.date, (map.get(r.date) || 0) + r.points);
+            let dates = Array.from(map.keys()).sort();
+            let points = dates.map(d => map.get(d));
+            let formatted = dates.map(d => formatDateRussian(d));
+            return { dates: formatted, points };
+        }
+
+        let cur = getMonthData(curYear, curMonth);
+        let prev = getMonthData(prevYear, prevMonth);
+        let layout = {
+            xaxis: { tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
+            yaxis: { gridcolor: getGridColor(), color: getAxisColor() },
+            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+            margin: { l: 45, r: 20, t: 45, b: 60 }
+        };
+        Plotly.newPlot('currentMonthChart', [{ x: cur.dates, y: cur.points, mode: 'lines+markers', name: 'Текущий месяц', line: { color: '#4caf50', width: 3 } }], { ...layout, title: `📅 ${monthNames[curMonth]} ${curYear}` });
+        Plotly.newPlot('previousMonthChart', [{ x: prev.dates, y: prev.points, mode: 'lines+markers', name: 'Прошлый месяц', line: { color: '#ff9800', width: 3 } }], { ...layout, title: `📅 ${monthNames[prevMonth]} ${prevYear}` });
+    }
+
+    // ПРОГНОЗ
+    function renderForecast() {
+        let last30 = filterPeriod(allRecords, 'month');
+        let byDay = new Map();
+        for (let r of last30) byDay.set(r.date, (byDay.get(r.date) || 0) + r.points);
+        let daily = [...byDay.values()];
+        if (daily.length === 0) {
+            document.getElementById('forecastValue').innerText = '—';
+            document.getElementById('forecastText').innerText = 'Недостаточно данных';
+            return;
+        }
+        let avg = daily.reduce((a, b) => a + b, 0) / daily.length;
+        let forecast = (avg * 30).toFixed(0);
+        let totalNow = allRecords.reduce((s, r) => s + r.points, 0);
+        document.getElementById('forecastValue').innerHTML = `+${forecast} баллов`;
+        document.getElementById('forecastText').innerHTML = `Текущий темп ${avg.toFixed(1)} баллов/день → через месяц ≈ <strong>${(totalNow + parseFloat(forecast)).toFixed(0)}</strong> баллов. Дальше — больше!`;
+    }
+
+    // ДОСТИЖЕНИЯ (полный список)
+    function renderAchievements() {
+        let totalPoints = allRecords.reduce((s, r) => s + r.points, 0);
+        let totalDays = new Set(allRecords.map(r => r.date)).size;
+        let sportDays = new Set(allRecords.filter(r => r.category === 'Спорт').map(r => r.date)).size;
+        let maxSport = Math.max(...allRecords.filter(r => r.category === 'Спорт').map(r => r.points), 0);
+        let studyPoints = allRecords.filter(r => r.category === 'Учёба').reduce((s, r) => s + r.points, 0);
+        let achievements = [
+            { name: '💯 Первая сотня', desc: '100 баллов', check: totalPoints >= 100, emoji: '🎯' },
+            { name: '🌟 500 баллов', check: totalPoints >= 500, emoji: '⭐' },
+            { name: '🏆 1000 баллов', check: totalPoints >= 1000, emoji: '🏆' },
+            { name: '📅 7 дней', desc: 'активность 7 дней', check: totalDays >= 7, emoji: '📆' },
+            { name: '🎖️ 30 дней', check: totalDays >= 30, emoji: '🎖️' },
+            { name: '🏋️ Спортсмен', desc: '10+ дней спорта', check: sportDays >= 10, emoji: '🏋️' },
+            { name: '💪 Рекордсмен', desc: '5+ баллов за спорт', check: maxSport >= 5, emoji: '💪' },
+            { name: '📚 Учёный', desc: '20+ учёбы', check: studyPoints >= 20, emoji: '📚' }
+        ];
+        let grid = document.getElementById('achievementsGrid');
+        let unlocked = achievements.filter(a => a.check).length;
+        grid.innerHTML = achievements.map(a => `<div class="achievement ${a.check ? 'unlocked' : 'locked'}"><div class="achievement-emoji">${a.emoji}</div><div class="achievement-name">${a.name}</div><div class="achievement-desc">${a.desc || ''}</div></div>`).join('');
+        let counterDiv = document.querySelector('.achievements-counter');
+        if (!counterDiv) {
+            let newDiv = document.createElement('div');
+            newDiv.className = 'achievements-counter';
+            newDiv.style.marginTop = '16px';
+            newDiv.style.textAlign = 'center';
+            newDiv.style.fontSize = '0.9rem';
+            newDiv.innerHTML = `🏅 Получено достижений: ${unlocked} из ${achievements.length}`;
+            grid.parentNode.appendChild(newDiv);
+        } else {
+            counterDiv.innerHTML = `🏅 Получено достижений: ${unlocked} из ${achievements.length}`;
+        }
+    }
+
+    // САЙДБАРЫ (увеличенные данные)
+    function updateSidebars() {
+        let today = new Date().toISOString().split('T')[0];
+        let todayPoints = allRecords.filter(r => r.date === today).reduce((s, r) => s + r.points, 0);
+        document.getElementById('todayPoints').innerText = todayPoints.toFixed(1);
+        let totalPointsAll = allRecords.reduce((s, r) => s + r.points, 0);
+        let nextRankGoal = 500;
+        let progress = Math.min(100, (totalPointsAll / nextRankGoal) * 100);
+        document.getElementById('rankProgressFill').style.width = progress + '%';
+        document.getElementById('rankNeedText').innerText = `${Math.max(0, nextRankGoal - totalPointsAll).toFixed(0)} до Старшего сержанта`;
+
+        let lastWeek = filterPeriod(allRecords, 'week');
+        let catSum = {};
+        for (let r of lastWeek) catSum[r.category] = (catSum[r.category] || 0) + r.points;
+        let top = Object.entries(catSum).sort((a, b) => b[1] - a[1]).slice(0, 3);
+        document.getElementById('topCategoriesList').innerHTML = top.map(([c, p]) => `<div class="top-category-item"><span>${c}</span><span style="font-weight:800;">${p.toFixed(1)}</span></div>`).join('') || '—';
+
+        let gymData = allRecords.filter(r => r.category === 'Спорт' && r.date >= new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]);
+        let gymByDate = new Map();
+        for (let r of gymData) gymByDate.set(r.date, (gymByDate.get(r.date) || 0) + r.points);
+        let gymDates = [...gymByDate.keys()].sort().slice(-12);
+        let gymPoints = gymDates.map(d => gymByDate.get(d));
+        Plotly.newPlot('gymChart', [{ x: gymDates, y: gymPoints, mode: 'lines+markers', name: 'Спорт (баллы)', line: { color: '#ff8c00', width: 3 } }], { margin: { l: 40, r: 20, t: 30, b: 45 }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', xaxis: { tickangle: 0, color: getAxisColor() }, yaxis: { color: getAxisColor() } });
+
+        let catTotal = allRecords.reduce((acc, r) => { acc[r.category] = (acc[r.category] || 0) + r.points; return acc; }, {});
+        let pieLabels = Object.keys(catTotal).slice(0, 6);
+        let pieValues = pieLabels.map(l => catTotal[l]);
+        Plotly.newPlot('categoryPieChart', [{ labels: pieLabels, values: pieValues, type: 'pie', marker: { colors: ['#4CAF50', '#FF9800', '#E91E63', '#00BCD4', '#8BC34A', '#9C27B0'] }, textinfo: 'percent', hole: 0.35 }], { margin: { l: 10, r: 10, t: 30, b: 10 }, paper_bgcolor: 'rgba(0,0,0,0)', showlegend: true, legend: { font: { size: 11 } } });
+    }
+
+    async function renderAll() {
+        await fetchData();
+        let filtered = filterPeriod(allRecords);
+        let categories = [...new Set(filtered.map(r => r.category))];
+        let select = document.getElementById('categorySelect');
+        select.innerHTML = '<option value="all">📊 Все категории</option>' + categories.sort().map(c => `<option value="${c}">${c}</option>`).join('');
+        if (selectedCategory !== 'all' && categories.includes(selectedCategory)) select.value = selectedCategory;
+        else { select.value = 'all'; selectedCategory = 'all'; }
+
+        let { traces, dates, totalByDate } = aggregate(filtered, selectedCategory);
+        updateStats(dates, totalByDate);
+
+        let tickLabels = dates.map(d => {
+            let rec = allRecords.find(r => r.date === d);
+            let time = rec?.time || '';
+            let date = formatDateRussian(d);
+            return time ? `<b>${time}</b><br>${date}` : date;
+        });
+
+        Plotly.newPlot('mainChart', traces, {
+            xaxis: { ticktext: tickLabels, tickvals: dates, type: 'category', tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
+            yaxis: { gridcolor: getGridColor(), color: getAxisColor() },
+            legend: { orientation: 'h', y: -0.15 },
+            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+            margin: { l: 50, r: 30, t: 55, b: 85 }
+        }, { responsive: true });
+
+        renderMonthCompare();
+        renderForecast();
+        renderAchievements();
+        updateSidebars();
+    }
+
+    // ИНИЦИАЛИЗАЦИЯ
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activePeriod = btn.dataset.period;
+            renderAll();
+        });
+    });
+    document.getElementById('categorySelect').addEventListener('change', (e) => {
+        selectedCategory = e.target.value;
+        renderAll();
+    });
+
+    initColaLip();
+    renderAll();
+</script>
 </body>
 </html>
