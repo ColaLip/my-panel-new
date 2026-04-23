@@ -11,7 +11,7 @@
             font-family: 'Segoe UI', system-ui, sans-serif;
             padding: 0;
             margin: 0;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, color 0.2s ease;
             min-height: 100vh;
             width: 100%;
         }
@@ -32,8 +32,9 @@
             margin-bottom: 25px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.08);
             width: 100%;
+            transition: background 0.2s;
         }
-        body.dark .card { background: rgba(30,40,50,0.92); }
+        body.dark .card { background: rgba(30,40,50,0.92); color: #eef2f7; }
         body.mint .card { background: rgba(240,255,240,0.92); }
         body.warm .card { background: rgba(255,248,240,0.92); }
         .header-flex {
@@ -51,8 +52,15 @@
             color: transparent;
             margin: 0;
         }
-        body.dark h1 { background: linear-gradient(120deg, #6ea8d4, #3c8db8); -webkit-background-clip: text; }
-        .sub { border-left: 4px solid #2c7ab1; padding-left: 16px; margin-bottom: 20px; }
+        body.dark h1 {
+            background: linear-gradient(120deg, #b0d4ff, #6ea8d4);
+            -webkit-background-clip: text;
+        }
+        .sub {
+            border-left: 4px solid #2c7ab1;
+            padding-left: 16px;
+            margin-bottom: 20px;
+        }
         .stats-grid {
             display: flex;
             flex-wrap: wrap;
@@ -67,10 +75,14 @@
             flex: 1;
             min-width: 150px;
             text-align: center;
+            transition: background 0.2s;
         }
-        body.dark .stat-card { background: rgba(20,30,40,0.7); }
+        body.dark .stat-card {
+            background: rgba(20,30,40,0.7);
+            color: #eef2f7;
+        }
         .stat-number { font-size: 2.2rem; font-weight: 800; color: #1a5d8f; }
-        body.dark .stat-number { color: #6ea8d4; }
+        body.dark .stat-number { color: #8ec8e8; }
         .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; opacity: 0.8; }
         .controls-row {
             display: flex;
@@ -165,9 +177,17 @@
     let categoryColors = {};
     const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
 
+    function getAxisColor() {
+        return document.body.classList.contains('dark') ? '#eef2f7' : '#1a2a3a';
+    }
+    function getGridColor() {
+        return document.body.classList.contains('dark') ? '#334455' : '#ccccdd';
+    }
+
     function setTheme(theme) {
         document.body.className = theme;
         localStorage.setItem('graph_theme', theme);
+        render(); 
     }
     document.querySelectorAll('.theme-btn').forEach(btn => {
         btn.addEventListener('click', () => setTheme(btn.dataset.theme));
@@ -281,10 +301,10 @@
         updateStats(dates, totalByDate);
         const layout = {
             title: selectedCategory === 'all' ? 'Прогресс по дням (Общага + все категории)' : `Прогресс по категории: ${selectedCategory}`,
-            xaxis: { title: 'Дата', tickangle: -35, gridcolor: '#ddd' },
-            yaxis: { title: 'Баллы', gridcolor: '#ddd' },
+            xaxis: { title: 'Дата', tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
+            yaxis: { title: 'Баллы', gridcolor: getGridColor(), color: getAxisColor() },
             hovermode: 'closest',
-            legend: { orientation: 'h', y: -0.15 },
+            legend: { orientation: 'h', y: -0.15, font: { color: getAxisColor() } },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             margin: { l: 50, r: 30, t: 60, b: 70 }
