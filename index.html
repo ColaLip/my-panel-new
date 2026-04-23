@@ -3,63 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои графики — подробная аналитика</title>
+    <title>Мои графики — полная аналитика</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background: #eef2f7;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            padding: 20px;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e2eaf5 100%);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            padding: 25px;
         }
         .container {
             max-width: 1400px;
-            margin: auto;
+            margin: 0 auto;
         }
         .card {
-            background: white;
-            border-radius: 28px;
-            padding: 20px 25px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(2px);
+            border-radius: 32px;
+            padding: 25px;
             margin-bottom: 25px;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
         h1 {
-            font-size: 1.7rem;
-            margin-bottom: 20px;
-            color: #1a4972;
+            font-size: 2rem;
+            background: linear-gradient(120deg, #1a4972, #2c7ab1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+        }
+        .sub {
+            color: #3a6b92;
+            margin-bottom: 25px;
+            border-left: 4px solid #2c7ab1;
+            padding-left: 16px;
         }
         .stats-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 18px;
+            gap: 20px;
             margin-bottom: 25px;
         }
-        .stat-box {
-            background: #f8fafd;
+        .stat-card {
+            background: white;
             border-radius: 24px;
-            padding: 12px 20px;
+            padding: 16px 24px;
             flex: 1;
-            min-width: 140px;
+            min-width: 150px;
             text-align: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: 0.2s;
         }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #1e6a9f;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: #456f94;
-            letter-spacing: 1px;
-        }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-number { font-size: 2.2rem; font-weight: 800; color: #1a5d8f; }
+        .stat-label { font-size: 0.7rem; text-transform: uppercase; color: #5f7e9c; letter-spacing: 1px; margin-top: 6px; }
         .controls {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 25px;
+        }
+        .period-group, .cat-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         button {
             background: #e4ebf3;
@@ -69,42 +78,46 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 0.85rem;
         }
-        button.active {
-            background: #1f6e9e;
-            color: white;
-        }
-        .note {
-            text-align: center;
-            font-size: 0.7rem;
-            margin-top: 15px;
-            color: #6f8eab;
-        }
+        button.active { background: #1f6e9e; color: white; box-shadow: 0 4px 10px rgba(31,110,158,0.3); }
+        .cat-btn { background: #f0f4f9; padding: 6px 18px; font-size: 0.75rem; }
+        .cat-btn.active-cat { background: #2c7ab1; color: white; }
+        .legend-note { text-align: center; font-size: 0.7rem; margin-top: 15px; color: #5f7e9c; }
+        footer { text-align: center; font-size: 0.7rem; margin-top: 30px; color: #7a97b0; }
+        @media (max-width: 700px) { .stats-grid { flex-direction: column; } }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="card">
-        <h1>📊 Подробный прогресс (Общага + категории)</h1>
-        <div class="stats-grid" id="stats">
-            <div class="stat-box"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">Всего баллов</div></div>
-            <div class="stat-box"><div class="stat-number" id="totalDays">0</div><div class="stat-label">Дней активности</div></div>
-            <div class="stat-box"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">Средний балл/день</div></div>
-            <div class="stat-box"><div class="stat-number" id="bestDay">0</div><div class="stat-label">Лучший день</div></div>
+        <h1>📊 Полная аналитика прогресса</h1>
+        <div class="sub">Общага + все категории • динамика роста</div>
+        <div class="stats-grid" id="statsPanel">
+            <div class="stat-card"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">Всего баллов</div></div>
+            <div class="stat-card"><div class="stat-number" id="totalDays">0</div><div class="stat-label">Дней активности</div></div>
+            <div class="stat-card"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">Средний балл/день</div></div>
+            <div class="stat-card"><div class="stat-number" id="bestDay">0</div><div class="stat-label">Лучший день</div></div>
         </div>
     </div>
 
     <div class="card">
         <div class="controls">
-            <div>
-                <button class="period-btn active" data-period="all">Всё время</button>
-                <button class="period-btn" data-period="week">7 дней</button>
-                <button class="period-btn" data-period="month">30 дней</button>
+            <div class="period-group">
+                <button class="period-btn active" data-period="all">📆 Всё время</button>
+                <button class="period-btn" data-period="week">🗓️ 7 дней</button>
+                <button class="period-btn" data-period="month">🌙 30 дней</button>
             </div>
         </div>
         <div id="mainChart" style="height: 550px;"></div>
-        <div class="note">📌 Нажмите на название категории в легенде, чтобы скрыть/показать линию</div>
+        <div class="legend-note">💡 Кликайте по названиям категорий в легенде, чтобы скрыть/показать линию</div>
     </div>
+
+    <div class="card">
+        <div style="font-weight: 600; margin-bottom: 12px;">🎨 Фильтр категорий (нажми, чтобы скрыть)</div>
+        <div id="categoryFilter" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+    </div>
+    <footer>Данные из Google Sheets • обновляются при перезагрузке</footer>
 </div>
 
 <script>
@@ -113,18 +126,12 @@
 
     let allRecords = [];
     let activePeriod = 'all';
+    let hiddenCategories = new Set();
+    let categoryColors = {};
 
-    const categoryColors = {
-        "Учёба": "#4CAF50",
-        "Спорт": "#FF9800",
-        "Развитие": "#9C27B0",
-        "Еда": "#E91E63",
-        "Сон": "#00BCD4",
-        "Уборка": "#8BC34A",
-        "Финансы": "#F44336"
-    };
+    const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
 
-    async function loadData() {
+    async function fetchData() {
         const res = await fetch(CSV_URL);
         const text = await res.text();
         const rows = text.split("\n").slice(1);
@@ -134,15 +141,15 @@
             if (cols.length >= 4 && cols[0] && cols[3]) {
                 let points = parseFloat(cols[3].replace(',', '.'));
                 if (isNaN(points)) continue;
-                let category = cols[1] || "Другое";
-                if (category === "Финансы") points = points * 0.0002;
-                if (category === "Английский" || category === "Чтение") category = "Развитие";
-                allRecords.push({ date: cols[0], category: category, points: points });
+                let cat = cols[1] || "Другое";
+                if (cat === "Финансы") points = points * 0.0002;
+                if (cat === "Английский" || cat === "Чтение") cat = "Развитие";
+                allRecords.push({ date: cols[0], category: cat, points: points });
             }
         }
     }
 
-    function filterByPeriod(data) {
+    function filterPeriod(data) {
         if (activePeriod === 'all') return data;
         const now = new Date();
         const limit = new Date();
@@ -156,20 +163,24 @@
             const date = rec.date;
             const cat = rec.category;
             if (!byDateCat.has(date)) byDateCat.set(date, new Map());
-            const inner = byDateCat.get(date);
-            inner.set(cat, (inner.get(cat) || 0) + rec.points);
+            byDateCat.get(date).set(cat, (byDateCat.get(date).get(cat) || 0) + rec.points);
         }
         const dates = Array.from(byDateCat.keys()).sort();
-        const categories = new Set();
+        const categoriesSet = new Set();
         for (let inner of byDateCat.values()) {
-            for (let cat of inner.keys()) categories.add(cat);
+            for (let cat of inner.keys()) categoriesSet.add(cat);
         }
+        const categories = Array.from(categoriesSet);
+        categories.forEach((cat, idx) => { if (!categoryColors[cat]) categoryColors[cat] = colorPalette[idx % colorPalette.length]; });
+        
         const traces = [];
         for (let cat of categories) {
-            const pointsByDate = dates.map(d => byDateCat.get(d).get(cat) || 0);
+            const y = dates.map(d => byDateCat.get(d).get(cat) || 0);
             traces.push({
-                x: dates, y: pointsByDate, mode: 'lines+markers', name: cat,
-                line: { width: 2.5, color: categoryColors[cat] || "#888" }
+                x: dates, y: y, mode: 'lines+markers', name: cat,
+                line: { width: 2.5, color: categoryColors[cat] },
+                marker: { size: 5 },
+                visible: hiddenCategories.has(cat) ? 'legendonly' : true
             });
         }
         const totalByDate = dates.map(d => {
@@ -178,32 +189,50 @@
             return sum;
         });
         traces.unshift({
-            x: dates, y: totalByDate, mode: 'lines+markers', name: 'Общага (сумма)',
-            line: { width: 4, color: '#1c4966', dash: 'solid' }
+            x: dates, y: totalByDate, mode: 'lines+markers', name: '📈 Общага (сумма)',
+            line: { width: 4, color: '#1c4966', dash: 'solid' },
+            marker: { size: 7 },
+            visible: true
         });
-        return { traces, dates, totalByDate };
+        return { traces, dates, totalByDate, categories };
     }
 
     function updateStats(dates, totalByDate) {
-        const totalPoints = totalByDate.reduce((a,b) => a+b, 0);
-        const totalDays = dates.length;
-        const avg = totalDays ? (totalPoints / totalDays).toFixed(1) : 0;
-        const best = totalDays ? Math.max(...totalByDate) : 0;
-        document.getElementById('totalPoints').innerText = totalPoints.toFixed(1);
-        document.getElementById('totalDays').innerText = totalDays;
+        const total = totalByDate.reduce((a,b)=>a+b,0);
+        const days = dates.length;
+        const avg = days ? (total/days).toFixed(1) : 0;
+        const best = days ? Math.max(...totalByDate) : 0;
+        document.getElementById('totalPoints').innerText = total.toFixed(1);
+        document.getElementById('totalDays').innerText = days;
         document.getElementById('avgPoints').innerText = avg;
         document.getElementById('bestDay').innerText = best.toFixed(1);
     }
 
     async function render() {
-        await loadData();
-        const filtered = filterByPeriod(allRecords);
-        const { traces, dates, totalByDate } = aggregate(filtered);
+        await fetchData();
+        const filtered = filterPeriod(allRecords);
+        const { traces, dates, totalByDate, categories } = aggregate(filtered);
         updateStats(dates, totalByDate);
+        
+        const container = document.getElementById('categoryFilter');
+        container.innerHTML = '';
+        categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.innerText = cat;
+            btn.className = 'cat-btn';
+            if (hiddenCategories.has(cat)) btn.style.opacity = '0.5';
+            btn.onclick = () => {
+                if (hiddenCategories.has(cat)) hiddenCategories.delete(cat);
+                else hiddenCategories.add(cat);
+                render();
+            };
+            container.appendChild(btn);
+        });
+        
         const layout = {
-            title: 'Прогресс по дням',
-            xaxis: { title: 'Дата', tickangle: -35 },
-            yaxis: { title: 'Баллы' },
+            title: 'Прогресс по дням (Общага + категории)',
+            xaxis: { title: 'Дата', tickangle: -35, gridcolor: '#ddd' },
+            yaxis: { title: 'Баллы', gridcolor: '#ddd' },
             hovermode: 'closest',
             legend: { orientation: 'h', y: -0.15 }
         };
@@ -218,7 +247,6 @@
             render();
         });
     });
-
     render();
 </script>
 </body>
