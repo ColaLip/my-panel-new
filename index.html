@@ -149,6 +149,29 @@
     let categoryColors = {};
     const colorPalette = ["#4CAF50", "#FF9800", "#9C27B0", "#E91E63", "#00BCD4", "#8BC34A", "#F44336", "#3F51B5", "#FF5722", "#009688"];
 
+    const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+
+    function formatDateRussian(dateStr) {
+        let parts = dateStr.split(' ');
+        let datePart = parts[0];
+        if (datePart.includes('T')) datePart = datePart.split('T')[0];
+        let [year, month, day] = datePart.split('-');
+        if (!year || !month || !day) return dateStr;
+        let monthName = monthNames[parseInt(month) - 1];
+        return `${parseInt(day)} ${monthName}`;
+    }
+
+    function extractTime(fullDateStr) {
+        if (!fullDateStr) return '';
+        let parts = fullDateStr.split(' ');
+        if (parts.length > 1) return parts[1];
+        if (fullDateStr.includes('T')) {
+            let timePart = fullDateStr.split('T')[1];
+            return timePart.split('.')[0];
+        }
+        return '';
+    }
+
     function getAxisColor() {
         return document.body.classList.contains('dark') ? '#eef2f7' : '#1a2a3a';
     }
@@ -175,14 +198,18 @@
         for (let row of rows) {
             let cols = row.split(",");
             if (cols.length >= 4 && cols[0] && cols[3]) {
-                // Замена запятой на точку и удаление пробелов
+                let rawDate = cols[0].trim();
+                let dateOnly = rawDate.split(' ')[0];
+                if (dateOnly.includes('T')) dateOnly = dateOnly.split('T')[0];
+                if (!dateOnly) continue;
+                let timeOnly = extractTime(rawDate);
                 let rawPoints = cols[3].trim().replace(',', '.');
                 let points = parseFloat(rawPoints);
                 if (isNaN(points)) continue;
                 let cat = cols[1] || "Другое";
                 if (cat === "Финансы") points = points * 0.0002;
                 if (cat === "Английский" || cat === "Чтение") cat = "Развитие";
-                allRecords.push({ date: cols[0], category: cat, points: points });
+                allRecords.push({ date: dateOnly, time: timeOnly, category: cat, points: points });
             }
         }
     }
@@ -204,7 +231,7 @@
             if (!byDateCat.has(date)) byDateCat.set(date, new Map());
             byDateCat.get(date).set(cat, (byDateCat.get(date).get(cat) || 0) + rec.points);
         }
-        const dates = Array.from(byDateCat.keys()).sort();
+        let dates = Array.from(byDateCat.keys()).sort();
         const categoriesSet = new Set();
         for (let inner of byDateCat.values()) for (let cat of inner.keys()) categoriesSet.add(cat);
         const categories = Array.from(categoriesSet);
@@ -273,15 +300,35 @@
         updateCategorySelect(allCats);
         const { traces, dates, totalByDate, categories } = aggregate(filtered, selectedCategory);
         updateStats(dates, totalByDate);
+        
+        // Формируем подписи: верхняя строка — время (если есть), нижняя — русская дата
+        let tickLabels = dates.map(d => {
+            let record = allRecords.find(r => r.date === d);
+            let timeStr = record && record.time ? record.time : '';
+            let dateStr = formatDateRussian(d);
+            if (timeStr) return `<b>${timeStr}</b><br>${dateStr}`;
+            return dateStr;
+        });
+        
         const layout = {
             title: selectedCategory === 'all' ? 'Прогресс по дням (Общага + все категории)' : `Прогресс по категории: ${selectedCategory}`,
-            xaxis: { title: 'Дата', tickangle: 0, gridcolor: getGridColor(), color: getAxisColor() },
+            xaxis: { 
+                title: '', 
+                tickangle: 0, 
+                ticktext: tickLabels,
+                tickvals: dates,
+                tickformat: '',
+                type: 'category',
+                gridcolor: getGridColor(), 
+                color: getAxisColor(),
+                tickfont: { size: 11 }
+            },
             yaxis: { title: 'Баллы', gridcolor: getGridColor(), color: getAxisColor() },
             hovermode: 'closest',
             legend: { orientation: 'h', y: -0.15, font: { color: getAxisColor() } },
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
-            margin: { l: 50, r: 30, t: 60, b: 70 }
+            margin: { l: 50, r: 30, t: 60, b: 80 }
         };
         Plotly.newPlot('mainChart', traces, layout, { responsive: true });
     }
