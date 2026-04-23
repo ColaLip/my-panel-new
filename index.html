@@ -2,34 +2,225 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Мои графики</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои графики — подробная аналитика</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #eef2f7;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: auto;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-size: 1.7rem;
+            margin-bottom: 20px;
+            color: #1a4972;
+        }
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        .stat-box {
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 12px 20px;
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e6a9f;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #456f94;
+            letter-spacing: 1px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+        button {
+            background: #e4ebf3;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button.active {
+            background: #1f6e9e;
+            color: white;
+        }
+        .note {
+            text-align: center;
+            font-size: 0.7rem;
+            margin-top: 15px;
+            color: #6f8eab;
+        }
+    </style>
 </head>
 <body>
-    <h1>📈 Прогресс (Общага)</h1>
-    <div id="chart" style="height: 500px;"></div>
-    <script>
-        const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
+<div class="container">
+    <div class="card">
+        <h1>📊 Подробный прогресс (Общага + категории)</h1>
+        <div class="stats-grid" id="stats">
+            <div class="stat-box"><div class="stat-number" id="totalPoints">0</div><div class="stat-label">Всего баллов</div></div>
+            <div class="stat-box"><div class="stat-number" id="totalDays">0</div><div class="stat-label">Дней активности</div></div>
+            <div class="stat-box"><div class="stat-number" id="avgPoints">0</div><div class="stat-label">Средний балл/день</div></div>
+            <div class="stat-box"><div class="stat-number" id="bestDay">0</div><div class="stat-label">Лучший день</div></div>
+        </div>
+    </div>
 
-        fetch(CSV_URL)
-            .then(r => r.text())
-            .then(csv => {
-                const rows = csv.split("\n").slice(1);
-                const byDate = {};
-                for (let row of rows) {
-                    let cols = row.split(",");
-                    if (cols.length >= 4 && cols[0] && cols[3]) {
-                        let date = cols[0];
-                        let points = parseFloat(cols[3].replace(',', '.'));
-                        if (cols[1] === "Финансы") points *= 0.0002;
-                        byDate[date] = (byDate[date] || 0) + points;
-                    }
-                }
-                const dates = Object.keys(byDate).sort();
-                const values = dates.map(d => byDate[d]);
-                Plotly.newPlot('chart', [{x: dates, y: values, mode: 'lines+markers'}]);
+    <div class="card">
+        <div class="controls">
+            <div>
+                <button class="period-btn active" data-period="all">Всё время</button>
+                <button class="period-btn" data-period="week">7 дней</button>
+                <button class="period-btn" data-period="month">30 дней</button>
+            </div>
+        </div>
+        <div id="mainChart" style="height: 550px;"></div>
+        <div class="note">📌 Нажмите на название категории в легенде, чтобы скрыть/показать линию</div>
+    </div>
+</div>
+
+<script>
+    const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
+    const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
+
+    let allRecords = [];
+    let activePeriod = 'all';
+
+    const categoryColors = {
+        "Учёба": "#4CAF50",
+        "Спорт": "#FF9800",
+        "Развитие": "#9C27B0",
+        "Еда": "#E91E63",
+        "Сон": "#00BCD4",
+        "Уборка": "#8BC34A",
+        "Финансы": "#F44336"
+    };
+
+    async function loadData() {
+        const res = await fetch(CSV_URL);
+        const text = await res.text();
+        const rows = text.split("\n").slice(1);
+        allRecords = [];
+        for (let row of rows) {
+            let cols = row.split(",");
+            if (cols.length >= 4 && cols[0] && cols[3]) {
+                let points = parseFloat(cols[3].replace(',', '.'));
+                if (isNaN(points)) continue;
+                let category = cols[1] || "Другое";
+                if (category === "Финансы") points = points * 0.0002;
+                if (category === "Английский" || category === "Чтение") category = "Развитие";
+                allRecords.push({ date: cols[0], category: category, points: points });
+            }
+        }
+    }
+
+    function filterByPeriod(data) {
+        if (activePeriod === 'all') return data;
+        const now = new Date();
+        const limit = new Date();
+        limit.setDate(now.getDate() - (activePeriod === 'week' ? 7 : 30));
+        return data.filter(d => new Date(d.date) >= limit);
+    }
+
+    function aggregate(data) {
+        const byDateCat = new Map(); // date → Map(category → points)
+        for (let rec of data) {
+            const date = rec.date;
+            const cat = rec.category;
+            if (!byDateCat.has(date)) byDateCat.set(date, new Map());
+            const inner = byDateCat.get(date);
+            inner.set(cat, (inner.get(cat) || 0) + rec.points);
+        }
+        const dates = Array.from(byDateCat.keys()).sort();
+        const categories = new Set();
+        for (let inner of byDateCat.values()) {
+            for (let cat of inner.keys()) categories.add(cat);
+        }
+        const traces = [];
+        for (let cat of categories) {
+            const pointsByDate = dates.map(d => byDateCat.get(d).get(cat) || 0);
+            traces.push({
+                x: dates, y: pointsByDate, mode: 'lines+markers', name: cat,
+                line: { width: 2.5, color: categoryColors[cat] || "#888" }
             });
-    </script>
+        }
+        // Общага (сумма всех категорий)
+        const totalByDate = dates.map(d => {
+            let sum = 0;
+            for (let cat of categories) sum += byDateCat.get(d).get(cat) || 0;
+            return sum;
+        });
+        traces.unshift({
+            x: dates, y: totalByDate, mode: 'lines+markers', name: 'Общага (сумма)',
+            line: { width: 4, color: '#1c4966', dash: 'solid' }
+        });
+        return { traces, dates, totalByDate };
+    }
+
+    function updateStats(dates, totalByDate) {
+        const totalPoints = totalByDate.reduce((a,b) => a+b, 0);
+        const totalDays = dates.length;
+        const avg = totalDays ? (totalPoints / totalDays).toFixed(1) : 0;
+        const best = totalDays ? Math.max(...totalByDate) : 0;
+        document.getElementById('totalPoints').innerText = totalPoints.toFixed(1);
+        document.getElementById('totalDays').innerText = totalDays;
+        document.getElementById('avgPoints').innerText = avg;
+        document.getElementById('bestDay').innerText = best.toFixed(1);
+    }
+
+    async function render() {
+        await loadData();
+        const filtered = filterByPeriod(allRecords);
+        const { traces, dates, totalByDate } = aggregate(filtered);
+        updateStats(dates, totalByDate);
+        const layout = {
+            title: 'Прогресс по дням',
+            xaxis: { title: 'Дата', tickangle: -35 },
+            yaxis: { title: 'Баллы' },
+            hovermode: 'closest',
+            legend: { orientation: 'h', y: -0.15 }
+        };
+        Plotly.newPlot('mainChart', traces, layout, { responsive: true });
+    }
+
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activePeriod = btn.dataset.period;
+            render();
+        });
+    });
+
+    render();
+</script>
 </body>
 </html>
