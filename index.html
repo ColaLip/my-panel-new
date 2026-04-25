@@ -29,7 +29,6 @@
             gap: 32px;
         }
 
-        /* ВСЕ КАРТОЧКИ — ЗОЛОТАЯ ПЕРЕЛИВАЮЩАЯСЯ ОКАНТОВКА */
         .sidebar-card, .card, .gold-card {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(8px);
@@ -46,24 +45,6 @@
             0% { border-color: gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
             50% { border-color: #ffd966; box-shadow: 0 0 22px rgba(255, 215, 0, 0.7); }
             100% { border-color: gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-        }
-
-        /* ЛАВАНДОВАЯ ТЕМА — ФИОЛЕТОВОЕ СЕРДЕЧКО (№3) */
-        body.lavender .card::after,
-        body.lavender .sidebar-card::after {
-            content: "💜";
-            position: absolute;
-            bottom: 15px;
-            right: 20px;
-            font-size: 2rem;
-            opacity: 0.6;
-            pointer-events: none;
-            animation: lavenderHeart 2.5s ease-in-out infinite;
-        }
-
-        @keyframes lavenderHeart {
-            0%, 100% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; }
         }
 
         .sidebar-title {
@@ -271,6 +252,7 @@
         return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
     }
     
+    // ЗВУК (№1)
     function playClickSound() {
         try {
             let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -329,6 +311,7 @@
         document.getElementById('achievementsCounter').innerHTML=`🏅 Получено: ${unlocked}/${achievements.length}`;
     }
     
+    // №⁴ — ОТМЕНА ДЕЙСТВИЯ ПОВТОРНЫМ КЛИКОМ
     function renderHabitTracker() {
         function checkWeekReset() { let currentWeek = getWeekNumber(new Date()); if (habitWeekData.weekNumber !== currentWeek) { habitWeekData = { weekNumber: currentWeek, mon: false, wed: false, fri: false }; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); return true; } return false; }
         checkWeekReset();
@@ -338,7 +321,15 @@
         const completedCount = [habitWeekData.mon, habitWeekData.wed, habitWeekData.fri].filter(Boolean).length;
         document.getElementById('habitProgressFill').style.width = (completedCount/3)*100 + '%';
         document.getElementById('habitProgressText').innerHTML = completedCount === 3 ? '🔒 Неделя закрыта!' : `${completedCount} / 3 выполнено`;
-        document.querySelectorAll('.habit-day-item').forEach(el => { el.addEventListener('click', (e) => { e.stopPropagation(); let dayKey = el.dataset.day; if ([habitWeekData.mon, habitWeekData.wed, habitWeekData.fri].filter(Boolean).length >= 3 && !habitWeekData[dayKey]) { showToast('Неделя уже закрыта! Жди понедельника 🔒'); return; } habitWeekData[dayKey] = !habitWeekData[dayKey]; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); renderHabitTracker(); sparkAroundElement(el); playClickSound(); if ([habitWeekData.mon, habitWeekData.wed, habitWeekData.fri].filter(Boolean).length === 3) showToast('🎉 Отлично! Все тренировки выполнены! Неделя закрыта! 🔒'); }); });
+        document.querySelectorAll('.habit-day-item').forEach(el => { el.addEventListener('click', (e) => { e.stopPropagation(); let dayKey = el.dataset.day; if ([habitWeekData.mon, habitWeekData.wed, habitWeekData.fri].filter(Boolean).length >= 3 && !habitWeekData[dayKey]) { showToast('Неделя уже закрыта! Жди понедельника 🔒'); return; } 
+            // ПЕРЕКЛЮЧАТЕЛЬ: если было true → false, если false → true
+            habitWeekData[dayKey] = !habitWeekData[dayKey]; 
+            localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); 
+            renderHabitTracker(); 
+            sparkAroundElement(el); 
+            playClickSound(); 
+            if ([habitWeekData.mon, habitWeekData.wed, habitWeekData.fri].filter(Boolean).length === 3) showToast('🎉 Отлично! Все тренировки выполнены! Неделя закрыта! 🔒'); 
+        }); });
     }
     
     function resetHabitWeek() { habitWeekData = { weekNumber: getWeekNumber(new Date()), mon: false, wed: false, fri: false }; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); renderHabitTracker(); showToast('Неделя сброшена!'); sparkAroundElement(document.getElementById('resetHabitWeekBtn')); }
@@ -377,7 +368,7 @@
         Plotly.newPlot('categoryPieChart',[{labels:sortedCats.map(c=>c[0]),values:sortedCats.map(c=>c[1]),type:'pie',marker:{colors:['#4CAF50','#FF9800','#E91E63','#00BCD4','#8BC34A','#9C27B0'],line:{color:'gold',width:3}},textinfo:'percent',hole:0.4}],{margin:{l:15,r:15,t:30,b:15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',showlegend:true,legend:{font:{size:11}}}); 
     }
     
-    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td></tr>`).join('')||'<tr><td colspan="3">Нет записей</td></tr>'; }
+    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td>`).join('')||'<tr><td colspan="3">Нет записей</td></tr>'; }
     
     function renderCalendar2026(){ const months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']; const select=document.getElementById('monthSelect2026'); if(select.options.length===0) for(let i=0;i<12;i++) select.add(new Option(months[i]+' 2026',i)); let month=parseInt(select.value); let year=2026; let firstDay=new Date(year,month,1).getDay(); let daysInMonth=new Date(year,month+1,0).getDate(); let grid=document.getElementById('calendarGrid2026'); grid.innerHTML=''; ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'].forEach(w=>grid.innerHTML+=`<div style="font-weight:bold; text-align:center;">${w}</div>`); let startOffset=(firstDay===0?6:firstDay-1); for(let i=0;i<startOffset;i++) grid.innerHTML+=`<div></div>`; for(let d=1;d<=daysInMonth;d++){ let dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; let isMarked=!!markedDays[dateStr]; let dayDiv=document.createElement('div'); dayDiv.className='cal-day'+(isMarked?' marked':''); dayDiv.innerText=d; dayDiv.addEventListener('click',()=>{ if(markedDays[dateStr]) delete markedDays[dateStr]; else markedDays[dateStr]=true; localStorage.setItem('markedDays2026',JSON.stringify(markedDays)); renderCalendar2026(); sparkAroundElement(dayDiv); playClickSound(); showToast(isMarked?'❌ День снят':'✅ День отмечен!'); }); grid.appendChild(dayDiv); } document.getElementById('markedCounter').innerText=Object.keys(markedDays).filter(d=>d.startsWith('2026-')).length; }
     
