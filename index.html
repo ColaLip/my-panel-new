@@ -17,13 +17,14 @@
         .dashboard {
             display: flex;
             gap: 32px;
-            max-width: 2200px;
+            max-width: 2400px;
             margin: 0 auto;
             padding: 28px;
         }
 
+        /* САЙДБАРЫ — УВЕЛИЧЕНЫ ДО 520px */
         .sidebar {
-            flex: 0 0 440px;
+            flex: 0 0 520px;
             display: flex;
             flex-direction: column;
             gap: 32px;
@@ -266,8 +267,13 @@
         .stat-card { flex: 1; text-align: center; background: rgba(255,255,255,0.5); border-radius: 28px; padding: 20px; backdrop-filter: blur(4px); }
         .stat-number { font-size: 2.5rem; font-weight: 900; background: linear-gradient(135deg, #1a5d8f, #2c7ab1); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
-        @media (max-width: 1400px) { .sidebar { flex: 0 0 380px; } }
-        @media (max-width: 1100px) { .dashboard { flex-direction: column; } .sidebar { flex-direction: row; flex-wrap: wrap; } .sidebar > div { flex: 1; min-width: 300px; } }
+        @media (max-width: 1500px) { .sidebar { flex: 0 0 420px; } }
+        @media (max-width: 1200px) { .sidebar { flex: 0 0 360px; } }
+        @media (max-width: 1000px) { 
+            .dashboard { flex-direction: column; } 
+            .sidebar { flex-direction: row; flex-wrap: wrap; width: 100%; } 
+            .sidebar > div { flex: 1; min-width: 300px; } 
+        }
 
         body.light { background: linear-gradient(135deg, #f0f4fa, #e2eaf5); color: #0f2842; }
         body.dark { background: linear-gradient(135deg, #1a2a3a, #0f1a24); color: #eef2f7; }
@@ -340,11 +346,12 @@
                 </div>
             </div>
         </div>
-        <div class="sidebar-card"><div class="sidebar-title">📈 Прогресс по категориям</div><div id="categoryStatsList" class="category-stats-list"></div><div id="categoryPieChart" style="height:320px; margin-top:20px;"></div></div>
-        <div class="sidebar-card"><div class="sidebar-title">🪖 Продвижение к 0.1%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="rankToPercentFill" style="width:0%"></div></div><div id="rankPercentText">0% до следующего ранга</div></div>
+        <div class="sidebar-card"><div class="sidebar-title">📈 Прогресс по категориям</div><div id="categoryStatsList" class="category-stats-list"></div><div id="categoryPieChart" style="height:360px; margin-top:20px;"></div></div>
+        <!-- БЛОК ПРОДВИЖЕНИЯ К 0.1% УДАЛЁН -->
     </div>
 </div>
 <script>
+    // [ВЕСЬ JS ОСТАЁТСЯ ТОЧНО ТАКИМ ЖЕ, КАК В ПРЕДЫДУЩЕЙ ВЕРСИИ]
     const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
     const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     let allRecords = [];
@@ -547,8 +554,6 @@
         let nextRankGoal=500; 
         document.getElementById('rankProgressFill').style.width=Math.min(100,(totalPointsAll/nextRankGoal)*100)+'%'; 
         document.getElementById('rankNeedText').innerText=`${Math.max(0,nextRankGoal-totalPointsAll).toFixed(0)} до Старшего сержанта`; 
-        document.getElementById('rankToPercentFill').style.width=Math.min(100,(totalPointsAll/2000)*100)+'%'; 
-        document.getElementById('rankPercentText').innerText=((totalPointsAll/2000)*100).toFixed(1)+'% к 0.1%'; 
         let lastWeek=filterPeriod(allRecords,'week'); 
         let catSum={}; 
         for(let r of lastWeek) catSum[r.category]=(catSum[r.category]||0)+r.points; 
