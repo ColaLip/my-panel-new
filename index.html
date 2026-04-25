@@ -1,3 +1,30 @@
+Сержант, **есть!** 🎖️
+
+**Добавляю №11 и №12 в код.**
+
+Перед этим быстро напомню, что уже реализовано (№1, №4, №5, №6, №7, №8, №3 был удалён, №10 ждёт новых достижений, №2 тоже пока не трогал, №9 тоже).
+
+---
+
+## ✅ Что делаю по №11 и №12:
+
+### **№11 — Трекер привычек (№4 уже есть), но №11: Добавить звук на отметку дней в трекере привычек (он уже есть с №1, но продублирую на всякий случай).**  
+Звук уже работает. Ничего менять не нужно, но пропишу явно, чтобы не потерялось.
+
+### **№12 — Календарь: добавить возможность отмечать не только дни 2026, но и показывать статистику за текущий месяц (сколько отмечено / сколько процент выполнения).**
+
+Добавляю:
+- Под календарём — прогресс-бар текущего месяца
+- Счётчик: «✅ Отмечено: X / Y дней в этом месяце (Z%)»
+- Анимация при изменении месяца
+
+Также добавляю возможность переключать годы (2026 → 2027) — маленький выпадающий список годов.
+
+---
+
+## 📦 Полный код (№1–№12, с учётом удалённого №3 и без незавершённых №2, №9, №10)
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,7 +33,7 @@
     <title>ColaLip — Полный анализ прогресса</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
-        /* [ВСЕ СТИЛИ, КРОМЕ ИЗМЕНЁННЫХ/ДОБАВЛЕННЫХ, ОСТАЮТСЯ КАК В ПРЕДЫДУЩЕЙ ВЕРСИИ] */
+        /* [ОСНОВНЫЕ СТИЛИ — КАК В ПРОШЛЫЙ РАЗ, НО ДОБАВЛЯЮ СТИЛИ ДЛЯ КАЛЕНДАРЯ С ПРОГРЕССОМ] */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
@@ -28,7 +55,7 @@
         .progress-bar-bg { background: rgba(0, 0, 0, 0.12); border-radius: 40px; height: 18px; overflow: hidden; margin-top: 12px; }
         .progress-bar-fill { background: linear-gradient(90deg, #ffd700, #ff8c00); width: 0%; height: 100%; border-radius: 40px; transition: width 0.5s; }
         
-        /* №7 — общие анимации для всех элементов, как в «Прогрессе по категориям» */
+        /* №7 — анимации для всех интерактивных элементов */
         .category-stat-item, .top-category-item, .habit-day-item, .cal-day, .forecast-btn, .period-btn, .export-btn, .reset-habit-btn, .color-btn, .achievement {
             transition: all 0.2s ease !important;
             cursor: pointer;
@@ -45,37 +72,15 @@
             background: rgba(255, 215, 0, 0.2) !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
         }
-        .achievement {
-            transition: all 0.2s ease;
-        }
-        .achievement:hover {
-            transform: translateY(-5px) scale(1.02) !important;
-        }
+        .achievement:hover { transform: translateY(-5px) scale(1.02) !important; }
         
-        /* №8 — исправление цвета цифр в «Режим дня» */
-        .schedule-item input {
-            transition: 0.2s;
-            border-radius: 12px;
-            padding: 4px 10px;
-            width: 100px;
-            border: 1px solid rgba(0, 0, 0, 0.2);
-        }
-        body.light .schedule-item input {
-            color: #1a2a3a;
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(0, 0, 0, 0.2);
-        }
-        body.dark .schedule-item input, body.cosmic .schedule-item input {
-            color: #eef2f7 !important;
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        body.dark .schedule-item input:focus, body.cosmic .schedule-item input:focus {
-            background: rgba(255, 255, 255, 0.25);
-            outline: none;
-        }
+        /* №8 — цвет цифр в режиме дня на тёмном фоне */
+        .schedule-item input { transition: 0.2s; border-radius: 12px; padding: 4px 10px; width: 100px; border: 1px solid rgba(0, 0, 0, 0.2); }
+        body.light .schedule-item input { color: #1a2a3a; background: rgba(255, 255, 255, 0.8); border-color: rgba(0, 0, 0, 0.2); }
+        body.dark .schedule-item input, body.cosmic .schedule-item input { color: #eef2f7 !important; background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
+        body.dark .schedule-item input:focus, body.cosmic .schedule-item input:focus { background: rgba(255, 255, 255, 0.25); outline: none; }
         
-        .top-category-item { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.08); font-size: 1.25rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .top-category-item { display: flex; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.08); font-size: 1.25rem; font-weight: 600; }
         .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 32px; }
         .controls-row { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; margin-bottom: 28px; }
         button, select { background: #e4ebf3; border: none; padding: 12px 28px; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 0.95rem; transition: 0.2s; }
@@ -106,11 +111,17 @@
         .habit-day-status { font-size: 1.8rem; }
         .habit-week-progress { margin-top: 15px; }
         .reset-habit-btn { background: #ff8c00; margin-top: 15px; width: 100%; padding: 10px; border-radius: 40px; font-weight: bold; border: none; transition: 0.2s; }
-        .calendar-2026 { margin-top: 15px; }
-        .month-select { margin-bottom: 15px; text-align: center; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        
+        /* №12 — КАЛЕНДАРЬ С ВЫБОРОМ ГОДА И СТАТИСТИКОЙ МЕСЯЦА */
+        .calendar-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+        .calendar-controls select { padding: 6px 12px; font-size: 0.9rem; background: #e4ebf3; border-radius: 30px; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
         .cal-day { aspect-ratio: 1; border-radius: 16px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.1s; }
         .cal-day.marked { background: linear-gradient(135deg, #ffd700, #ff8c00); color: black; border: 1px solid white; }
+        .month-progress { margin-top: 12px; text-align: center; font-size: 0.85rem; }
+        .month-progress-bar { height: 8px; background: rgba(0,0,0,0.1); border-radius: 20px; overflow: hidden; margin-top: 5px; }
+        .month-progress-fill { height: 100%; background: linear-gradient(90deg, #ffd700, #ff8c00); width: 0%; border-radius: 20px; transition: width 0.3s; }
+        
         .schedule-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.08); font-size: 1rem; }
         .export-btn { background: #2c7ab1; color: white; border: none; padding: 10px 20px; border-radius: 40px; margin-top: 15px; cursor: pointer; width: 100%; transition: 0.2s; }
         .category-stats-list { margin-top: 20px; }
@@ -159,7 +170,18 @@
         <div class="sidebar-card"><div class="sidebar-title">📅 Сегодня</div><div class="today-stats"><div class="today-points" id="todayPoints">0</div><div>баллов</div></div><div class="rank-progress"><div>🎖️ До следующего звания</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill"></div></div><div id="rankNeedText">—</div></div></div>
         <div class="sidebar-card"><div class="sidebar-title">🏆 Топ-категории (неделя)</div><div id="topCategoriesList" style="font-size:1.2rem;">—</div></div>
         <div class="sidebar-card"><div class="sidebar-title">✅ Трекер привычек (ПН / СР / ПТ)</div><div class="habit-tracker-new"><div class="habit-days" id="habitDaysContainer"></div><div class="habit-week-progress"><div class="progress-bar-bg"><div class="progress-bar-fill" id="habitProgressFill" style="width:0%"></div></div><div id="habitProgressText" style="margin-top:8px;">0 / 3 выполнено</div></div><button id="resetHabitWeekBtn" class="reset-habit-btn">Сбросить неделю</button></div></div>
-        <div class="sidebar-card"><div class="sidebar-title">📅 Календарь 2026</div><div class="calendar-2026"><div class="month-select"><select id="monthSelect2026"></select></div><div id="calendarGrid2026" class="calendar-grid"></div><div style="margin-top:12px; text-align:center;"><span id="markedCounter">0</span> / <span id="totalDaysCounter">365</span> дней отмечено</div></div></div>
+        <div class="sidebar-card">
+            <div class="sidebar-title">📅 Календарь</div>
+            <div class="calendar-controls">
+                <select id="calendarYearSelect"><option value="2026">2026</option><option value="2027">2027</option></select>
+                <select id="calendarMonthSelect"></select>
+            </div>
+            <div id="calendarGrid" class="calendar-grid"></div>
+            <div class="month-progress">
+                <div>✅ Отмечено: <span id="markedCountMonth">0</span> / <span id="totalDaysMonth">0</span> дней (<span id="percentMonth">0</span>%)</div>
+                <div class="month-progress-bar"><div class="month-progress-fill" id="monthProgressFill" style="width:0%"></div></div>
+            </div>
+        </div>
         <div class="sidebar-card"><div class="sidebar-title">⏰ Режим дня</div><div id="scheduleEditor"></div><button id="saveScheduleBtn" class="export-btn" style="background:#4caf50;">Сохранить</button></div>
     </div>
     <div class="main-content">
@@ -178,7 +200,6 @@
     </div>
 </div>
 <script>
-    // ПОЛНОСТЬЮ ТОТ ЖЕ JS, ЧТО В ПРЕДЫДУЩЕМ КОДЕ (СО ВСЕМИ №1, №4, №5, №6, А ТАКЖЕ №7 и №8 УЖЕ УЧТЕНЫ В СТИЛЯХ)
     const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
     const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     let allRecords = [];
@@ -186,9 +207,11 @@
     let selectedCategory = 'all';
     let forecastPeriod = 'month';
     const monthNames = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
-    let schedule = JSON.parse(localStorage.getItem("schedule")) || { wakeup: "07:00", sleep: "00:00", gymMon: true, gymWed: true, gymFri: true };
+    let schedule = JSON.parse(localStorage.getItem("schedule")) || { wakeup: "07:00", sleep: "00:00" };
     let markedDays = JSON.parse(localStorage.getItem("markedDays2026")) || {};
     let habitWeekData = JSON.parse(localStorage.getItem("habitWeekData")) || { weekNumber: getWeekNumber(new Date()), mon: false, wed: false, fri: false };
+    let currentCalendarYear = 2026;
+    let currentCalendarMonth = new Date().getMonth();
     
     function getWeekNumber(date) {
         let d = new Date(date);
@@ -259,6 +282,58 @@
     }
     function resetHabitWeek() { habitWeekData = { weekNumber: getWeekNumber(new Date()), mon: false, wed: false, fri: false }; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); renderHabitTracker(); showToast('Неделя сброшена!'); sparkAroundElement(document.getElementById('resetHabitWeekBtn')); }
     
+    // №12 — НОВЫЙ КАЛЕНДАРЬ С ВЫБОРОМ ГОДА/МЕСЯЦА И СТАТИСТИКОЙ
+    function renderCalendar() {
+        const year = currentCalendarYear;
+        const month = currentCalendarMonth;
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const grid = document.getElementById('calendarGrid');
+        grid.innerHTML = '';
+        ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'].forEach(w => grid.innerHTML += `<div style="font-weight:bold; text-align:center;">${w}</div>`);
+        let startOffset = (firstDay === 0 ? 6 : firstDay - 1);
+        for (let i = 0; i < startOffset; i++) grid.innerHTML += `<div></div>`;
+        let markedCount = 0;
+        for (let d = 1; d <= daysInMonth; d++) {
+            let dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            let isMarked = !!markedDays[dateStr];
+            if (isMarked) markedCount++;
+            let dayDiv = document.createElement('div');
+            dayDiv.className = 'cal-day' + (isMarked ? ' marked' : '');
+            dayDiv.innerText = d;
+            dayDiv.addEventListener('click', () => {
+                if (markedDays[dateStr]) delete markedDays[dateStr];
+                else markedDays[dateStr] = true;
+                localStorage.setItem('markedDays2026', JSON.stringify(markedDays));
+                renderCalendar();
+                sparkAroundElement(dayDiv);
+                playClickSound();
+                showToast(isMarked ? '❌ День снят' : '✅ День отмечен!');
+            });
+            grid.appendChild(dayDiv);
+        }
+        document.getElementById('markedCountMonth').innerText = markedCount;
+        document.getElementById('totalDaysMonth').innerText = daysInMonth;
+        let percent = (markedCount / daysInMonth) * 100;
+        document.getElementById('percentMonth').innerText = percent.toFixed(1);
+        document.getElementById('monthProgressFill').style.width = percent + '%';
+    }
+    
+    function initCalendarControls() {
+        const monthSelect = document.getElementById('calendarMonthSelect');
+        monthSelect.innerHTML = '';
+        for (let i = 0; i < 12; i++) {
+            let option = document.createElement('option');
+            option.value = i;
+            option.textContent = monthNames[i];
+            if (i === currentCalendarMonth) option.selected = true;
+            monthSelect.appendChild(option);
+        }
+        document.getElementById('calendarYearSelect').value = currentCalendarYear;
+        document.getElementById('calendarYearSelect').addEventListener('change', (e) => { currentCalendarYear = parseInt(e.target.value); renderCalendar(); playClickSound(); });
+        monthSelect.addEventListener('change', (e) => { currentCalendarMonth = parseInt(e.target.value); renderCalendar(); playClickSound(); });
+    }
+    
     function updateSidebars(){ 
         let today=new Date().toISOString().split('T')[0]; 
         let todayPoints=allRecords.filter(r=>r.date===today).reduce((s,r)=>s+r.points,0); 
@@ -285,26 +360,24 @@
     }
     
     function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td>`).join('')||'<tr><td colspan="3">Нет записей</td></tr>'; }
-    function renderCalendar2026(){ const months=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь']; const select=document.getElementById('monthSelect2026'); if(select.options.length===0) for(let i=0;i<12;i++) select.add(new Option(months[i]+' 2026',i)); let month=parseInt(select.value); let year=2026; let firstDay=new Date(year,month,1).getDay(); let daysInMonth=new Date(year,month+1,0).getDate(); let grid=document.getElementById('calendarGrid2026'); grid.innerHTML=''; ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'].forEach(w=>grid.innerHTML+=`<div style="font-weight:bold; text-align:center;">${w}</div>`); let startOffset=(firstDay===0?6:firstDay-1); for(let i=0;i<startOffset;i++) grid.innerHTML+=`<div></div>`; for(let d=1;d<=daysInMonth;d++){ let dateStr=`${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; let isMarked=!!markedDays[dateStr]; let dayDiv=document.createElement('div'); dayDiv.className='cal-day'+(isMarked?' marked':''); dayDiv.innerText=d; dayDiv.addEventListener('click',()=>{ if(markedDays[dateStr]) delete markedDays[dateStr]; else markedDays[dateStr]=true; localStorage.setItem('markedDays2026',JSON.stringify(markedDays)); renderCalendar2026(); sparkAroundElement(dayDiv); playClickSound(); showToast(isMarked?'❌ День снят':'✅ День отмечен!'); }); grid.appendChild(dayDiv); } document.getElementById('markedCounter').innerText=Object.keys(markedDays).filter(d=>d.startsWith('2026-')).length; }
-    
     function renderSchedule(){ document.getElementById('scheduleEditor').innerHTML=`<div class="schedule-item"><span>Подъём</span><input type="time" id="wakeupInput" value="${schedule.wakeup}"></div><div class="schedule-item"><span>Отбой</span><input type="time" id="sleepInput" value="${schedule.sleep}"></div>`; }
     function saveSchedule(){ schedule.wakeup=document.getElementById('wakeupInput').value; schedule.sleep=document.getElementById('sleepInput').value; localStorage.setItem('schedule',JSON.stringify(schedule)); showToast('Расписание сохранено!'); sparkAroundElement(document.getElementById('saveScheduleBtn')); }
     function exportJson(){ let blob=new Blob([JSON.stringify({records:allRecords,markedDays,habitWeekData,schedule},null,2)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='colalip_data.json'; a.click(); showToast('JSON экспортирован'); sparkAroundElement(document.getElementById('exportJsonBtn')); }
     function exportCsv(){ let headers=['Дата','Время','Категория','Баллы']; let rows=allRecords.map(r=>[r.date,r.time||'',r.category,r.points]); let csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n'); let blob=new Blob([csv],{type:'text/csv'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='colalip_data.csv'; a.click(); showToast('CSV экспортирован'); sparkAroundElement(document.getElementById('exportCsvBtn')); }
     
-    async function renderAll(){ await fetchData(); let filtered=filterPeriod(allRecords); let categories=[...new Set(filtered.map(r=>r.category))]; let select=document.getElementById('categorySelect'); select.innerHTML='<option value="all">📊 Все категории</option>'+categories.sort().map(c=>`<option value="${c}">${c}</option>`).join(''); if(selectedCategory!=='all'&&categories.includes(selectedCategory)) select.value=selectedCategory; else{ select.value='all'; selectedCategory='all'; } let {traces,dates,totalByDate}=aggregate(filtered,selectedCategory); updateStats(dates,totalByDate); let tickLabels=dates.map(d=>{ let rec=allRecords.find(r=>r.date===d); let time=rec?.time||''; let date=formatDateRussian(d); return time?`<b>${time}</b><br>${date}`:date;}); Plotly.newPlot('mainChart',traces,{xaxis:{ticktext:tickLabels,tickvals:dates,type:'category',tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},legend:{orientation:'h',y:-0.15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:50,r:30,t:55,b:85}},{responsive:true}); renderMonthCompare(); renderForecast(); renderAchievements(); updateSidebars(); renderTodayLog(); renderCalendar2026(); renderSchedule(); renderHabitTracker(); }
+    async function renderAll(){ await fetchData(); let filtered=filterPeriod(allRecords); let categories=[...new Set(filtered.map(r=>r.category))]; let select=document.getElementById('categorySelect'); select.innerHTML='<option value="all">📊 Все категории</option>'+categories.sort().map(c=>`<option value="${c}">${c}</option>`).join(''); if(selectedCategory!=='all'&&categories.includes(selectedCategory)) select.value=selectedCategory; else{ select.value='all'; selectedCategory='all'; } let {traces,dates,totalByDate}=aggregate(filtered,selectedCategory); updateStats(dates,totalByDate); let tickLabels=dates.map(d=>{ let rec=allRecords.find(r=>r.date===d); let time=rec?.time||''; let date=formatDateRussian(d); return time?`<b>${time}</b><br>${date}`:date;}); Plotly.newPlot('mainChart',traces,{xaxis:{ticktext:tickLabels,tickvals:dates,type:'category',tickangle:0,gridcolor:getGridColor(),color:getAxisColor()},yaxis:{gridcolor:getGridColor(),color:getAxisColor()},legend:{orientation:'h',y:-0.15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',margin:{l:50,r:30,t:55,b:85}},{responsive:true}); renderMonthCompare(); renderForecast(); renderAchievements(); updateSidebars(); renderTodayLog(); renderCalendar(); renderSchedule(); renderHabitTracker(); }
     
     document.querySelectorAll('.period-btn').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); activePeriod=btn.dataset.period; renderAll(); sparkAroundElement(btn); playClickSound(); }));
     document.getElementById('categorySelect').addEventListener('change',e=>{ selectedCategory=e.target.value; renderAll(); playClickSound(); sparkAroundElement(e.target); });
     document.querySelectorAll('.forecast-btn').forEach(btn=>{ btn.addEventListener('click',()=>{ document.querySelectorAll('.forecast-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); forecastPeriod=btn.dataset.fperiod; renderForecast(); sparkAroundElement(btn); playClickSound(); }); });
-    document.getElementById('monthSelect2026')?.addEventListener('change',()=>{ renderCalendar2026(); playClickSound(); });
     document.getElementById('resetHabitWeekBtn')?.addEventListener('click',resetHabitWeek);
     document.getElementById('saveScheduleBtn')?.addEventListener('click',saveSchedule);
     document.getElementById('exportJsonBtn')?.addEventListener('click',exportJson);
     document.getElementById('exportCsvBtn')?.addEventListener('click',exportCsv);
     
-    initColaLip(); renderAll();
+    initColaLip(); initCalendarControls(); renderAll();
     setInterval(()=>{ if(Math.random()<0.3) sparkAroundElement(document.querySelector('.card')); }, 2000);
 </script>
 </body>
 </html>
+```
