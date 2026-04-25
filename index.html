@@ -22,7 +22,6 @@
             padding: 28px;
         }
 
-        /* САЙДБАРЫ — 520px */
         .sidebar {
             flex: 0 0 520px;
             display: flex;
@@ -62,7 +61,7 @@
         .progress-bar-bg { background: rgba(0, 0, 0, 0.12); border-radius: 40px; height: 18px; overflow: hidden; margin-top: 12px; }
         .progress-bar-fill { background: linear-gradient(90deg, #ffd700, #ff8c00); width: 0%; height: 100%; border-radius: 40px; transition: width 0.5s; }
 
-        /* №7 — анимации для всех интерактивных элементов */
+        /* Анимации для всех интерактивных элементов */
         .category-stat-item, .top-category-item, .habit-day-item, .cal-day, .forecast-btn, .period-btn, .export-btn, .reset-habit-btn, .color-btn, .achievement {
             transition: all 0.2s ease !important;
             cursor: pointer;
@@ -81,20 +80,51 @@
         }
         .achievement:hover { transform: translateY(-5px) scale(1.02) !important; }
 
-        /* №8 — цвет цифр в режиме дня на тёмном фоне + УВЕЛИЧЕННЫЕ НАДПИСИ И ВРЕМЯ */
+        /* Трекер привычек — дни на новой строке, равномерно */
+        .habit-tracker-new { text-align: center; }
+        .habit-days {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin: 20px 0;
+            width: 100%;
+        }
+        .habit-day-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            border-radius: 28px;
+            background: rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .habit-day-item.completed {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            color: black;
+            box-shadow: 0 0 15px gold;
+        }
+        .habit-day-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
+        .habit-day-status { font-size: 1.8rem; }
+        .habit-week-progress { margin-top: 15px; }
+        .reset-habit-btn { background: #ff8c00; margin-top: 15px; width: 100%; padding: 10px; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        .reset-habit-btn:hover { transform: scale(1.02); background: #ffa500; }
+
+        /* Режим дня — увеличенные шрифты */
         .schedule-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 16px 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
         }
         .schedule-item input {
-            font-size: 1.2rem;
-            padding: 8px 12px;
-            width: 120px;
+            font-size: 1.4rem;
+            padding: 10px 14px;
+            width: 140px;
             border-radius: 16px;
             border: 1px solid rgba(0, 0, 0, 0.2);
             transition: 0.2s;
@@ -104,7 +134,7 @@
         body.dark .schedule-item input, body.cosmic .schedule-item input { color: #eef2f7 !important; background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
         body.dark .schedule-item input:focus, body.cosmic .schedule-item input:focus { background: rgba(255, 255, 255, 0.25); outline: none; }
 
-        /* КНОПКИ ПРОГНОЗА НА ТЁМНОМ ФОНЕ — ВСЕГДА ВИДИМЫ */
+        /* Кнопки прогноза на тёмном фоне — всегда видны */
         body.dark .forecast-btn,
         body.cosmic .forecast-btn {
             background: #2a3a48;
@@ -177,16 +207,7 @@
         .forecast-btn:hover, .forecast-btn.active { background: #ff8c00; color: white; }
 
         .log-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .habit-tracker-new { text-align: center; }
-        .habit-days { display: flex; justify-content: space-around; gap: 20px; margin: 20px 0; }
-        .habit-day-item { flex: 1; text-align: center; padding: 15px 0; border-radius: 28px; background: rgba(0,0,0,0.05); cursor: pointer; }
-        .habit-day-item.completed { background: linear-gradient(135deg, #ffd700, #ff8c00); color: black; box-shadow: 0 0 15px gold; }
-        .habit-day-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 8px; }
-        .habit-day-status { font-size: 1.8rem; }
-        .habit-week-progress { margin-top: 15px; }
-        .reset-habit-btn { background: #ff8c00; margin-top: 15px; width: 100%; padding: 10px; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
-        .reset-habit-btn:hover { transform: scale(1.02); background: #ffa500; }
-
+        
         .calendar-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
         .calendar-controls select { padding: 6px 12px; font-size: 0.9rem; background: #e4ebf3; border-radius: 30px; cursor: pointer; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 10px; }
@@ -313,7 +334,17 @@
     <div class="sidebar">
         <div class="sidebar-card"><div class="sidebar-title">📅 Сегодня</div><div class="today-stats"><div class="today-points" id="todayPoints">0</div><div>баллов</div></div><div class="rank-progress"><div>🎖️ До следующего звания</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="rankProgressFill"></div></div><div id="rankNeedText">—</div></div></div>
         <div class="sidebar-card"><div class="sidebar-title">🏆 Топ-категории (неделя)</div><div id="topCategoriesList" style="font-size:1.2rem;">—</div></div>
-        <div class="sidebar-card"><div class="sidebar-title">✅ Трекер привычек (ПН / СР / ПТ)</div><div class="habit-tracker-new"><div class="habit-days" id="habitDaysContainer"></div><div class="habit-week-progress"><div class="progress-bar-bg"><div class="progress-bar-fill" id="habitProgressFill" style="width:0%"></div></div><div id="habitProgressText" style="margin-top:8px;">0 / 3 выполнено</div></div><button id="resetHabitWeekBtn" class="reset-habit-btn">Сбросить неделю</button></div></div>
+        <div class="sidebar-card">
+            <div class="sidebar-title">✅ Трекер привычек (ПН / СР / ПТ)</div>
+            <div class="habit-tracker-new">
+                <div class="habit-days" id="habitDaysContainer"></div>
+                <div class="habit-week-progress">
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="habitProgressFill" style="width:0%"></div></div>
+                    <div id="habitProgressText" style="margin-top:8px;">0 / 3 выполнено</div>
+                </div>
+                <button id="resetHabitWeekBtn" class="reset-habit-btn">Сбросить неделю</button>
+            </div>
+        </div>
         <div class="sidebar-card">
             <div class="sidebar-title">📅 Календарь</div>
             <div class="calendar-controls">
@@ -581,7 +612,7 @@
         Plotly.newPlot('categoryPieChart',[{labels:sortedCats.map(c=>c[0]),values:sortedCats.map(c=>c[1]),type:'pie',marker:{colors:['#4CAF50','#FF9800','#E91E63','#00BCD4','#8BC34A','#9C27B0'],line:{color:'gold',width:3}},textinfo:'percent',hole:0.4}],{margin:{l:15,r:15,t:30,b:15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',showlegend:true,legend:{font:{size:11}}}); 
     }
     
-    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td>`).join('')||'<tr><td colspan="3">Нет записей</td>'; }
+    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td>`).join('')||'<tr><td colspan="3">Нет записей</tr>'; }
     function renderSchedule(){ document.getElementById('scheduleEditor').innerHTML=`<div class="schedule-item"><span>Подъём</span><input type="time" id="wakeupInput" value="${schedule.wakeup}"></div><div class="schedule-item"><span>Отбой</span><input type="time" id="sleepInput" value="${schedule.sleep}"></div>`; }
     function saveSchedule(){ schedule.wakeup=document.getElementById('wakeupInput').value; schedule.sleep=document.getElementById('sleepInput').value; localStorage.setItem('schedule',JSON.stringify(schedule)); showToast('Расписание сохранено!'); sparkAroundElement(document.getElementById('saveScheduleBtn')); }
     function exportJson(){ let blob=new Blob([JSON.stringify({records:allRecords,markedDays,habitWeekData,schedule},null,2)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='colalip_data.json'; a.click(); showToast('JSON экспортирован'); sparkAroundElement(document.getElementById('exportJsonBtn')); }
