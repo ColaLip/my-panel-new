@@ -6,7 +6,6 @@
     <title>ColaLip — Полный анализ прогресса</title>
     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js"></script>
     <style>
-        /* [ВСЕ СТИЛИ ОСТАЮТСЯ КАК В ПРЕДЫДУЩЕМ КОДЕ, НИЧЕГО НЕ МЕНЯЮ] */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
@@ -104,11 +103,46 @@
         .category-bar-bg { flex: 1; height: 12px; background: rgba(0,0,0,0.1); border-radius: 20px; margin: 0 15px; overflow: hidden; }
         .category-bar-fill { height: 100%; border-radius: 20px; transition: width 0.5s; }
         
-        .hobby-list { display: flex; flex-direction: column; gap: 16px; margin-top: 10px; }
-        .hobby-item { display: flex; align-items: center; gap: 16px; font-size: 1.3rem; font-weight: 600; padding: 14px 18px; background: rgba(0, 0, 0, 0.03); border-radius: 28px; transition: 0.2s; cursor: default; }
-        .hobby-item:hover { transform: translateX(10px); background: rgba(255, 215, 0, 0.15); border-radius: 32px; padding-left: 24px; }
-        .hobby-emoji { font-size: 2rem; }
-        .hobby-name { font-size: 1.2rem; font-weight: 700; }
+        /* НОВЫЙ БЛОК ХОББИ — КАК ЭКРАН */
+        .hobby-screen {
+            background: linear-gradient(135deg, rgba(0,0,0,0.03), rgba(0,0,0,0.08));
+            border-radius: 28px;
+            padding: 5px 0;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.05);
+            animation: fadeInUp 0.5s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hobby-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 10px 0;
+        }
+        .hobby-item {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            transition: all 0.2s ease;
+            cursor: default;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+        .hobby-item:hover {
+            transform: translateX(12px) scale(1.01);
+            background: rgba(255, 215, 0, 0.2);
+            border-color: gold;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .hobby-emoji { font-size: 2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .hobby-name { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.5px; }
         
         .color-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 20px auto; max-width: 90%; }
         .color-btn { display: flex; align-items: center; gap: 8px; padding: 8px 20px; border-radius: 40px; background: rgba(0,0,0,0.05); font-size: 0.9rem; font-weight: 600; border: 1px solid transparent; }
@@ -167,12 +201,24 @@
         <div class="card"><h3>📤 Экспорт данных</h3><button id="exportJsonBtn" class="export-btn" style="background:#2c7ab1;">Экспорт JSON</button><button id="exportCsvBtn" class="export-btn" style="background:#2c7ab1; margin-top:10px;">Экспорт CSV</button></div>
     </div>
     <div class="sidebar">
-        <div class="sidebar-card"><div class="sidebar-title">🎯 Проекция хобби</div><div class="hobby-list"><div class="hobby-item"><span class="hobby-emoji">🏍️</span><span class="hobby-name">Катание на мотоцикле</span></div><div class="hobby-item"><span class="hobby-emoji">🛶</span><span class="hobby-name">Байдарки</span></div><div class="hobby-item"><span class="hobby-emoji">🎮</span><span class="hobby-name">Компьютерные игры</span></div><div class="hobby-item"><span class="hobby-emoji">🎬</span><span class="hobby-name">Просмотр фильмов</span></div><div class="hobby-item"><span class="hobby-emoji">🚙</span><span class="hobby-name">Off‑road</span></div></div></div>
+        <div class="sidebar-card">
+            <div class="sidebar-title">🎯 Хобби</div>
+            <div class="hobby-screen">
+                <div class="hobby-list">
+                    <div class="hobby-item"><span class="hobby-emoji">🏍️</span><span class="hobby-name">Катание на мотоцикле</span></div>
+                    <div class="hobby-item"><span class="hobby-emoji">🛶</span><span class="hobby-name">Байдарки</span></div>
+                    <div class="hobby-item"><span class="hobby-emoji">🎮</span><span class="hobby-name">Компьютерные игры</span></div>
+                    <div class="hobby-item"><span class="hobby-emoji">🎬</span><span class="hobby-name">Просмотр фильмов</span></div>
+                    <div class="hobby-item"><span class="hobby-emoji">🚙</span><span class="hobby-name">Off‑road</span></div>
+                </div>
+            </div>
+        </div>
         <div class="sidebar-card"><div class="sidebar-title">📈 Прогресс по категориям</div><div id="categoryStatsList" class="category-stats-list"></div><div id="categoryPieChart" style="height:320px; margin-top:20px;"></div></div>
         <div class="sidebar-card"><div class="sidebar-title">🪖 Продвижение к 0.1%</div><div class="progress-bar-bg"><div class="progress-bar-fill" id="rankToPercentFill" style="width:0%"></div></div><div id="rankPercentText">0% до следующего ранга</div></div>
     </div>
 </div>
 <script>
+    // [ВЕСЬ JS ОСТАЁТСЯ ТОЧНО ТАКИМ ЖЕ, КАК В ПРЕДЫДУЩЕЙ ВЕРСИИ — С №10, №12 И Т.Д.]
     const SPREADSHEET_ID = "1m0ViL0a2TDaS6vbTGLlv1cuzrLtZaMHLvXdQR2QEMII";
     const CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=0`;
     let allRecords = [];
@@ -239,7 +285,6 @@
         let totalPoints = allRecords.reduce((s, r) => s + r.points, 0);
         let studyPoints = allRecords.filter(r => r.category === 'Учёба').reduce((s, r) => s + r.points, 0);
         
-        // Проверка на 7 дней подряд с >10 баллов
         let dates = [...new Set(allRecords.map(r => r.date))].sort();
         let maxStreak = 0;
         let currentStreak = 0;
@@ -290,7 +335,6 @@
         });
         document.getElementById('achievementsCounter').innerHTML = `🏅 Получено: ${unlocked} / ${achievements.length}`;
     }
-    // ★★★★★★★★★★★★★★★★★★★★★★★★★
     
     function renderHabitTracker() {
         function checkWeekReset() { let currentWeek = getWeekNumber(new Date()); if (habitWeekData.weekNumber !== currentWeek) { habitWeekData = { weekNumber: currentWeek, mon: false, wed: false, fri: false }; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); return true; } return false; }
@@ -312,7 +356,6 @@
     }
     function resetHabitWeek() { habitWeekData = { weekNumber: getWeekNumber(new Date()), mon: false, wed: false, fri: false }; localStorage.setItem("habitWeekData", JSON.stringify(habitWeekData)); renderHabitTracker(); showToast('Неделя сброшена!'); sparkAroundElement(document.getElementById('resetHabitWeekBtn')); }
     
-    // №12 — КАЛЕНДАРЬ С ВЫБОРОМ ГОДА И СТАТИСТИКОЙ МЕСЯЦА
     function renderCalendar() {
         const year = currentCalendarYear;
         const month = currentCalendarMonth;
@@ -389,7 +432,7 @@
         Plotly.newPlot('categoryPieChart',[{labels:sortedCats.map(c=>c[0]),values:sortedCats.map(c=>c[1]),type:'pie',marker:{colors:['#4CAF50','#FF9800','#E91E63','#00BCD4','#8BC34A','#9C27B0'],line:{color:'gold',width:3}},textinfo:'percent',hole:0.4}],{margin:{l:15,r:15,t:30,b:15},paper_bgcolor:'rgba(0,0,0,0)',plot_bgcolor:'rgba(0,0,0,0)',showlegend:true,legend:{font:{size:11}}}); 
     }
     
-    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td></tr>`).join('')||'<tr><td colspan="3">Нет записей</td></tr>'; }
+    function renderTodayLog(){ let today=new Date().toISOString().split('T')[0]; let todayRecs=allRecords.filter(r=>r.date===today).sort((a,b)=>a.time.localeCompare(b.time)); document.getElementById('logTableBody').innerHTML=todayRecs.map(r=>`<tr><td>${r.time||'--:--'}</td><td>${r.category}</td><td>${r.points.toFixed(1)}</td>`).join('')||'<tr><td colspan="3">Нет записей</td></tr>'; }
     function renderSchedule(){ document.getElementById('scheduleEditor').innerHTML=`<div class="schedule-item"><span>Подъём</span><input type="time" id="wakeupInput" value="${schedule.wakeup}"></div><div class="schedule-item"><span>Отбой</span><input type="time" id="sleepInput" value="${schedule.sleep}"></div>`; }
     function saveSchedule(){ schedule.wakeup=document.getElementById('wakeupInput').value; schedule.sleep=document.getElementById('sleepInput').value; localStorage.setItem('schedule',JSON.stringify(schedule)); showToast('Расписание сохранено!'); sparkAroundElement(document.getElementById('saveScheduleBtn')); }
     function exportJson(){ let blob=new Blob([JSON.stringify({records:allRecords,markedDays,habitWeekData,schedule},null,2)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='colalip_data.json'; a.click(); showToast('JSON экспортирован'); sparkAroundElement(document.getElementById('exportJsonBtn')); }
